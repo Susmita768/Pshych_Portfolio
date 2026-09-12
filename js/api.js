@@ -121,66 +121,49 @@ const WellnessAPI = {
   },
 
   /**
-   * Submit the contact / orientation form.
-   * @param {Object} data - { title, name, address, mobile, altContact, email,
-   *   occupation, dob, maritalStatus, spouseName, numChildren, childrenDetails,
-   *   referredBy, valueSystem, fiveValues, currentlyAffecting, copingWith, supportNeeded }
+   * Submit the contact / orientation form directly to Formspree via AJAX.
+   * Endpoint: https://formspree.io/f/xyeyvqqz
+   * @param {Object} data - Complete key-value pairs from the form
+   * @returns {Promise<{ ok: boolean, data?: any, error?: string }>}
    */
   async submitContact(data) {
-    if (CONFIG.USE_MOCK) {
-      const records = readMockStore("mock_contacts");
-      records.push({ ...data, createdAt: new Date().toISOString() });
-      writeMockStore("mock_contacts", records);
-      return mockDelay({ ok: true });
-    }
+    const FORMSPREE_ENDPOINT = "https://formspree.io/f/xyeyvqqz";
+    try {
+      const res = await fetch(FORMSPREE_ENDPOINT, {
+        method: "POST",
+        headers: {
+          "Accept": "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      });
 
-    // --- REAL BACKEND CONTRACT -------------------------------------------
-    // POST {API_BASE_URL}/contact
-    // body: { title, name, address, mobile, altContact, email, occupation, dob,
-    //         maritalStatus, spouseName, numChildren, childrenDetails, referredBy,
-    //         valueSystem, fiveValues, currentlyAffecting, copingWith, supportNeeded }
-    //
-    // try {
-    //   const res = await fetch(`${CONFIG.API_BASE_URL}/contact`, {
-    //     method: "POST",
-    //     headers: buildHeaders(),
-    //     body: JSON.stringify(data),
-    //   });
-    //   if (!res.ok) throw new Error(`Message failed to send (${res.status})`);
-    //   return { ok: true };
-    // } catch (err) {
-    //   return { ok: false, error: err.message };
-    // }
+      if (res.ok) {
+        const json = await res.json().catch(() => ({}));
+        return { ok: true, data: json };
+      }
+
+      let errorMsg = "Unable to submit your details right now. Please try again or reach out directly.";
+      try {
+        const errJson = await res.json();
+        if (errJson && errJson.errors && Array.isArray(errJson.errors) && errJson.errors.length > 0) {
+          errorMsg = errJson.errors.map((e) => e.message || e.field).join(", ");
+        } else if (errJson && errJson.error) {
+          errorMsg = errJson.error;
+        }
+      } catch (parseErr) {
+        // fallback
+      }
+      return { ok: false, error: errorMsg };
+    } catch (networkErr) {
+      return {
+        ok: false,
+        error: "A network error occurred. Please check your connection and try again.",
+      };
+    }
   },
 
-  /**
-   * Subscribe an email to the newsletter / gentle check-in list.
-   * @param {string} email
-   */
-  async subscribeNewsletter(email) {
-    if (CONFIG.USE_MOCK) {
-      const records = readMockStore("mock_subscribers");
-      if (!records.includes(email)) records.push(email);
-      writeMockStore("mock_subscribers", records);
-      return mockDelay({ ok: true });
-    }
 
-    // --- REAL BACKEND CONTRACT -------------------------------------------
-    // POST {API_BASE_URL}/newsletter
-    // body: { email }
-    //
-    // try {
-    //   const res = await fetch(`${CONFIG.API_BASE_URL}/newsletter`, {
-    //     method: "POST",
-    //     headers: buildHeaders(),
-    //     body: JSON.stringify({ email }),
-    //   });
-    //   if (!res.ok) throw new Error(`Subscription failed (${res.status})`);
-    //   return { ok: true };
-    // } catch (err) {
-    //   return { ok: false, error: err.message };
-    // }
-  },
 
   /**
    * Process payment for a booking (card / UPI) or record a "pay at session" choice.

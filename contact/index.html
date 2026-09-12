@@ -16,28 +16,32 @@
 
 <main id="main">
 
-  <section class="wrap page-hero">
-    <span class="eyebrow">Get in Touch</span>
-    <h1>Have a question <em class="accent">before you begin?</em></h1>
-    <p class="lede">Whether you're curious about coaching, unsure where to start, or just want to say hello — I'd love to hear from you. I read every message myself and reply within 1–2 business days.</p>
+  <section class="wrap page-hero" data-reveal>
+    <span class="eyebrow reveal-eyebrow">Get in Touch</span>
+    <div class="reveal-mask">
+      <h1 class="reveal-heading">Have a question <em class="accent">before you begin?</em></h1>
+    </div>
+    <p class="lede reveal-text">Whether you're curious about coaching, unsure where to start, or just want to say hello — I'd love to hear from you. I read every message myself and reply within 1–2 business days.</p>
   </section>
 
-  <section class="wrap section">
+  <section class="wrap section" id="contact">
     <div class="contact-grid">
 
       <div class="glass contact-form-card" style="padding:clamp(1.5rem, 3vw, 2.5rem);" data-reveal>
 
         <div class="orientation-header">
-          <div class="orientation-title-box">
-            <h3 class="orientation-title">Orientation Form</h3>
+          <div class="reveal-mask">
+            <h2 class="orientation-title reveal-heading">Help Me Get to Know You</h2>
           </div>
-          <p class="orientation-subtitle">Want to know you to heal you</p>
-          <p class="orientation-note"><strong>Note:</strong> All personal information is kept secure and confidential, in accordance with relevant privacy laws and policies.</p>
+          <p class="orientation-subtitle reveal-text">A thoughtful space to share what’s on your mind and help me understand how I can support you.</p>
+          <p class="orientation-note reveal-text"><strong>Privacy Assurance:</strong> All personal reflections and details are kept strictly private and confidential, in accordance with applicable privacy standards.</p>
         </div>
 
-        <form id="contactForm">
+        <form id="contactForm" action="https://formspree.io/f/xyeyvqqz" method="POST" novalidate>
+          <input type="hidden" name="_subject" value="New Inquiry — Help Me Get to Know You — Kajal Kumari Life Coaching" />
 
-          <p class="form-section-title">Client Information</p>
+          <p class="form-section-title">A Little About You</p>
+          <p class="form-section-desc" style="font-size:0.9rem; color:var(--text-muted); margin-top:-0.5rem; margin-bottom:1.35rem; line-height:1.55;">A few details will help me understand where you are right now and how I can best support you.</p>
           <div class="field-row">
             <div class="field">
               <label for="cTitle">Title</label>
@@ -139,30 +143,66 @@
             <textarea id="cSupport" name="supportNeeded" placeholder="Share your thoughts…"></textarea>
           </div>
 
-          <button type="submit" class="btn btn-primary btn-block">Send Message</button>
-          <div class="status-msg" id="contactStatus"></div>
+          <button type="submit" class="btn btn-primary btn-block">Send Orientation Message</button>
+          <div class="status-msg" id="contactStatus" role="status"></div>
         </form>
       </div>
 
       <div class="glass contact-info-card" style="padding:clamp(1.5rem, 3vw, 2.5rem); transition-delay:100ms;" data-reveal>
-        <h3>Contact details</h3>
+        <span class="eyebrow reveal-eyebrow">Direct Contact</span>
+        <div class="reveal-mask">
+          <h3 class="reveal-heading" style="margin-top:0.4rem;">Get in Touch</h3>
+        </div>
+        <p class="reveal-text" style="font-size:0.92rem;color:var(--text-muted);margin-bottom:1.2rem;">Kajal reads every inquiry personally and replies within 1–2 business days.</p>
+
         <div class="info-row">
           <div><strong style="color:var(--ink);display:block;">Email</strong><span><a href="mailto:Feelheard2@gmail.com" style="color:inherit;">Feelheard2@gmail.com</a></span></div>
         </div>
         <div class="info-row">
-          <div><strong style="color:var(--ink);display:block;">WhatsApp</strong><span>+91 91201 92847</span></div>
+          <div><strong style="color:var(--ink);display:block;">WhatsApp</strong><span><a href="https://wa.me/919120192847" target="_blank" rel="noopener noreferrer" style="color:inherit;">+91 91201 92847</a></span></div>
         </div>
         <div class="info-row">
           <div><strong style="color:var(--ink);display:block;">Hours</strong><span>Mon–Sat · 10:00am–6:00pm</span></div>
         </div>
+        <div class="info-row">
+          <div><strong style="color:var(--ink);display:block;">Location</strong><span>Online Video / Voice (Worldwide)</span></div>
+        </div>
 
-        <a href="../booking" class="btn btn-primary btn-block" style="margin-top:1.5rem;">Book Your 1st Free Clarity Call →</a>
+        <div class="contact-whatsapp-quick">
+          <p>Prefer immediate chat?</p>
+          <a href="#" data-whatsapp-cta class="btn btn-whatsapp btn-block" aria-label="Chat with Kajal on WhatsApp">
+            <svg viewBox="0 0 24 24" aria-hidden="true" style="width:18px;height:18px;fill:currentColor;"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            <span>Message on WhatsApp</span>
+          </a>
+        </div>
+
+        <a href="../booking" class="btn btn-primary btn-block" style="margin-top:1.25rem;">Book Your Free Clarity Call →</a>
       </div>
 
     </div>
   </section>
 
 </main>
+
+<!-- Premium Success Modal Overlay -->
+<div id="contactSuccessModal" class="contact-modal-backdrop" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="modalSuccessTitle">
+  <div class="contact-modal-card glass">
+    <div class="contact-modal-icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="10" stroke="rgba(36, 106, 72, 0.22)" fill="rgba(234, 244, 238, 0.85)"></circle>
+        <path d="M7.5 12.2l3.2 3.3 5.8-6.5" stroke="#246a48"></path>
+      </svg>
+    </div>
+    <h3 id="modalSuccessTitle" class="contact-modal-title">Message Sent Successfully</h3>
+    <p class="contact-modal-desc">
+      Thank you for reaching out. Your details have been received successfully. I’m taking you to WhatsApp so we can continue the conversation.
+    </p>
+    <div class="contact-modal-redirect">
+      <span class="redirect-spinner" aria-hidden="true"></span>
+      <span>Opening WhatsApp…</span>
+    </div>
+  </div>
+</div>
 
 <div id="site-footer"></div>
 

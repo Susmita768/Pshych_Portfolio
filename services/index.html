@@ -16,13 +16,15 @@
 
 <main id="main">
 
-  <section class="wrap page-hero">
-    <span class="eyebrow">Coaching Services</span>
-    <h1>Support for where you are — <em class="accent">and clarity for where you want to go.</em></h1>
-    <p class="lede">Feeling stuck, overwhelmed, uncertain, or caught in overthinking? Coaching gives you a safe, confidential space to understand what's holding you back, reconnect with yourself, and move forward with intention.</p>
+  <section class="wrap page-hero" data-reveal>
+    <span class="eyebrow reveal-eyebrow">Coaching Services</span>
+    <div class="reveal-mask">
+      <h1 class="reveal-heading">Support for where you are — <em class="accent">and clarity for where you want to go.</em></h1>
+    </div>
+    <p class="lede reveal-text">Feeling stuck, overwhelmed, uncertain, or caught in overthinking? Coaching gives you a safe, confidential space to understand what's holding you back, reconnect with yourself, and move forward with intention.</p>
   </section>
 
-  <section class="wrap section--tight">
+  <section class="wrap section--tight" id="services">
     <div id="servicesDetail" style="display:flex;flex-direction:column;"></div>
   </section>
 
@@ -30,9 +32,11 @@
     <div class="glass section--tight reflective-panel" style="padding-inline: clamp(1.5rem, 5vw, 3.5rem);" data-reveal>
       <div class="section-head center">
         <img src="../assets/kajal/reflective-desk.jpg" alt="" class="panel-photo" aria-hidden="true" />
-        <h2>A Coaching Space Designed Around You</h2>
-        <p>Our conversations go beyond simply talking about problems. Together, we'll explore your thoughts, emotions, beliefs, and patterns to help you understand yourself more clearly and identify the next step that feels right for you.</p>
-        <p style="margin-top:1rem; font-weight:600; letter-spacing:0.02em;">Clarity. Confidence. Awareness. Action.</p>
+        <div class="reveal-mask">
+          <h2 class="reveal-heading">A Coaching Space Designed Around You</h2>
+        </div>
+        <p class="reveal-text">Our conversations go beyond simply talking about problems. Together, we'll explore your thoughts, emotions, beliefs, and patterns to help you understand yourself more clearly and identify the next step that feels right for you.</p>
+        <p class="reveal-text" style="margin-top:1rem; font-weight:600; letter-spacing:0.02em;">Clarity. Confidence. Awareness. Action.</p>
       </div>
     </div>
   </section>
@@ -42,11 +46,13 @@
       <div class="cta-banner-top">
         <img src="../assets/kajal/cta-photo.jpg" alt="Kajal Kumari" class="cta-photo" />
         <div>
-          <h3>Ready to Take the First Step?</h3>
-          <p>Book a free Clarity Call and let's explore where you are, what you need, and how coaching could support you.</p>
+          <div class="reveal-mask">
+            <h3 class="reveal-heading">Ready to Take the First Step?</h3>
+          </div>
+          <p class="reveal-text">Book a free Clarity Call and let's explore where you are, what you need, and how coaching could support you.</p>
         </div>
       </div>
-      <a href="../booking" class="btn btn-primary">Book Your Free Clarity Call</a>
+      <a href="../booking" class="btn btn-primary reveal-cta">Book Your Free Clarity Call</a>
     </div>
   </section>
 

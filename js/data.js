@@ -158,5 +158,9 @@ window.SITE_DATA = {
       q: "Who is coaching for?",
       a: "Coaching is for teens, working professionals, and couples — anyone who feels stuck, lacks clarity, or wants more confidence in their choices.",
     },
+    {
+      q: "How is life coaching different from therapy or medical treatment?",
+      a: "Life coaching is forward-looking and developmental. We focus on building self-awareness, clarifying personal values, untangling overthinking, and establishing aligned action in your daily life, career, and relationships. Coaching is not clinical psychiatric care, medical treatment, or therapy.",
+    },
   ],
 };

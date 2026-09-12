@@ -56,7 +56,7 @@ psych-portfolio/
 │   └── pages.css      # hero, cards, booking CTA, FAQ, contact, about
 ├── js/
 │   ├── data.js         # ALL site content (areas, services, FAQs, WhatsApp number...)
-│   ├── api.js           # ⭐ the ONE file to edit to connect a real backend (contact form / newsletter only)
+│   ├── api.js           # ⭐ backend client (contact form)
 │   ├── components.js    # shared header/footer, injected on every page
 │   └── main.js           # scroll reveal, area/services grids, FAQ, WhatsApp links, contact form
 └── assets/
@@ -89,13 +89,12 @@ number, no spaces/symbols).
 
 ## Connecting a real backend
 
-The contact form and newsletter signup go through **`js/api.js`** and
-nothing else. To go live:
+The contact form connects through Formspree (or **`js/api.js`**). To go live:
 
 1. Open `js/api.js`.
 2. Set `CONFIG.API_BASE_URL` to your server's URL.
 3. Set `CONFIG.USE_MOCK = false`.
-4. Each function (`submitContact`, `subscribeNewsletter`, `fetchServices`)
+4. Each function (`submitContact`, `fetchServices`)
    already has a commented-out `fetch()` call with the suggested REST
    contract — uncomment it and delete the mock block above it.
 

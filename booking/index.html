@@ -16,29 +16,62 @@
 
 <main id="main">
 
-  <section class="wrap page-hero">
-    <span class="eyebrow">Book a Session</span>
-    <h1>Take the <em class="accent">first step</em> toward clarity.</h1>
-    <p class="lede">You don't need to arrive with a plan. You don't even need to know exactly what you're looking for — just start with a free 30-minute Clarity Call.</p>
+  <section class="wrap page-hero" data-reveal>
+    <span class="eyebrow reveal-eyebrow">Book a Session</span>
+    <div class="reveal-mask">
+      <h1 class="reveal-heading">Take the <em class="accent">first step</em> toward clarity.</h1>
+    </div>
+    <p class="lede reveal-text">You don't need to arrive with a plan. You don't even need to know exactly what you're looking for — just start with a free 30-minute Clarity Call.</p>
   </section>
 
-  <section class="wrap section--tight">
-    <div class="glass booking-cta-card" data-reveal>
-      <span class="eyebrow">Free 30-Minute Clarity Call</span>
-      <h2>Let's Connect</h2>
-      <p>Have a question, want to explore coaching, or simply feel ready to take the next step? Connect with Kajal to share where you are, what you're navigating, and what you'd like to move toward. Reach out through the contact page and start the conversation.</p>
-      <a href="../contact" class="btn btn-primary btn-whatsapp" aria-label="Connect with Kajal">
-        Connect →
-      </a>
-      <p class="hint" style="margin-top:1rem;color:var(--text-muted);">I'd love to hear from you. Let's start the conversation.</p>
+  <section class="wrap section--tight" id="booking">
+    <div id="bookingContextNotice" style="text-align:center;margin-bottom:1rem;"></div>
+
+    <div class="glass booking-single-card" data-reveal>
+      <div class="booking-single-content">
+        <span class="eyebrow reveal-eyebrow">Start Your Journey</span>
+        <div class="reveal-mask">
+          <h2 class="reveal-heading">Ready to Take the Next Step?</h2>
+        </div>
+        <p class="reveal-text">A calm, confidential space to share what's on your mind and explore what you're looking for.</p>
+        <div class="booking-action-wrap">
+          <a href="../contact" class="btn-connect reveal-cta" id="btnBookingConnect" aria-label="Connect with Kajal Kumari">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            <span>Connect Me</span>
+            <span class="arrow" aria-hidden="true">→</span>
+          </a>
+          <p class="reassurance-note">Confidential &bull; No pressure &bull; A space to begin</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3-Step Journey -->
+    <div class="roadmap-strip" data-reveal>
+      <div class="roadmap-step">
+        <div class="roadmap-step-num">Step 01</div>
+        <h5>Reach Out</h5>
+        <p>Click Connect Me to share what's on your mind. No preparation needed.</p>
+      </div>
+      <div class="roadmap-step">
+        <div class="roadmap-step-num">Step 02</div>
+        <h5>30-Min Clarity Call</h5>
+        <p>A relaxed, private online session to talk through what you're navigating. Free and completely obligation-free.</p>
+      </div>
+      <div class="roadmap-step">
+        <div class="roadmap-step-num">Step 03</div>
+        <h5>Discover Your Path</h5>
+        <p>Gain genuine perspective on your next step. You decide whether coaching feels right for your journey.</p>
+      </div>
     </div>
   </section>
 
   <section class="wrap section" id="faq">
-    <div class="section-head center">
-      <span class="eyebrow">Good to Know</span>
-      <h2>Frequently asked questions</h2>
-      <p>Questions about booking, sessions, or how coaching works — here's what I hear most.</p>
+    <div class="section-head center" data-reveal>
+      <span class="eyebrow reveal-eyebrow">Good to Know</span>
+      <div class="reveal-mask">
+        <h2 class="reveal-heading">Frequently asked questions</h2>
+      </div>
+      <p class="reveal-text">Questions about booking, sessions, or how coaching works — here's what I hear most.</p>
     </div>
     <div class="glass" style="max-width:760px;margin-inline:auto;padding:1.5rem clamp(1.5rem, 4vw, 2.5rem);" data-reveal>
       <div id="faqList"></div>
@@ -50,11 +83,13 @@
       <div class="cta-banner-top">
         <img src="../assets/kajal/cta-photo.jpg" alt="Kajal Kumari" class="cta-photo" />
         <div>
-          <span class="eyebrow">Still have a question?</span>
-          <h3>Reach out — I'm happy to help.</h3>
+          <span class="eyebrow reveal-eyebrow">Still have a question?</span>
+          <div class="reveal-mask">
+            <h3 class="reveal-heading">Reach out — I'm happy to help.</h3>
+          </div>
         </div>
       </div>
-      <a href="../contact" class="btn btn-primary">Contact Me →</a>
+      <a href="../contact" class="btn btn-primary reveal-cta">Contact Me →</a>
     </div>
   </section>
 

@@ -16,34 +16,97 @@
 
 <main id="main">
 
-  <section class="wrap section about-section">
+  <section class="wrap section about-section" id="about">
     <div class="about-grid">
       <div class="about-portrait" data-reveal>
         <div class="glass frame">
-          <img src="../assets/kajal/about-portrait.jpg" alt="Kajal Kumari" />
+          <img src="../assets/kajal/about-portrait.jpg" alt="Kajal Kumari — Life &amp; Clarity Coach" />
         </div>
-        <div class="portrait-name-caption">
-          <span>Kajal Kumari</span>
-          <span class="role">Life &amp; Clarity Coach</span>
+        <div class="portrait-details">
+          <div class="portrait-header">
+            <h2 class="portrait-name">Kajal Kumari</h2>
+            <div class="portrait-role">Life &amp; Clarity Coach</div>
+          </div>
+          <ul class="portrait-credential-list" role="list">
+            <li class="credential-item">
+              <span class="credential-bullet" aria-hidden="true">
+                <svg viewBox="0 0 6 6" width="5" height="5" fill="currentColor"><circle cx="3" cy="3" r="2.5"/></svg>
+              </span>
+              <span class="credential-text"><strong>Coaching Certification 121</strong> — Life By Design Methodology</span>
+            </li>
+            <li class="credential-item">
+              <span class="credential-bullet" aria-hidden="true">
+                <svg viewBox="0 0 6 6" width="5" height="5" fill="currentColor"><circle cx="3" cy="3" r="2.5"/></svg>
+              </span>
+              <span class="credential-text">75 hours intensive training, Jun–Aug 2025</span>
+            </li>
+            <li class="credential-item">
+              <span class="credential-bullet" aria-hidden="true">
+                <svg viewBox="0 0 6 6" width="5" height="5" fill="currentColor"><circle cx="3" cy="3" r="2.5"/></svg>
+              </span>
+              <span class="credential-text">Certificate of Merit — Coach–Coachee Experience</span>
+            </li>
+            <li class="credential-item">
+              <span class="credential-bullet" aria-hidden="true">
+                <svg viewBox="0 0 6 6" width="5" height="5" fill="currentColor"><circle cx="3" cy="3" r="2.5"/></svg>
+              </span>
+              <span class="credential-text">1-on-1 Online Sessions across India &amp; Worldwide</span>
+            </li>
+          </ul>
         </div>
-        <ul class="portrait-info-list">
-          <li>Coaching Certification 121 — Life By Design Methodology</li>
-          <li>75 hours, Jun–Aug 2025</li>
-        </ul>
       </div>
 
       <div class="about-body" data-reveal style="transition-delay:100ms">
-        <h2>Hello, I'm Kajal Kumari</h2>
-        <p style="margin-top:1.25rem;">I work with teens, working professionals, and couples who feel stuck or unsure of their next step. Together, we cut through overthinking and self-doubt to build real clarity and confidence — one honest conversation at a time, entirely online.</p>
-
-        <h2 style="margin-top:2rem;">Certifications</h2>
-        <div class="certificate-gallery" style="margin-top:1rem;">
-          <img src="../assets/certificates/cert-1.jpg" alt="Coaching Certification 121 — Certificate of Completion" />
-          <img src="../assets/certificates/cert-2.jpg" alt="Certificate of Merit — Coach-Coachee Experience" />
+        <span class="eyebrow reveal-eyebrow">Meet Your Coach</span>
+        <div class="reveal-mask">
+          <h1 class="reveal-heading">Hello, I'm Kajal Kumari</h1>
         </div>
-        <img src="../assets/kajal/graduation-moment.jpg" alt="Kajal Kumari receiving her Coaching Certification" class="graduation-photo" style="margin-top:1rem;" />
+        
+        <p style="margin-top:1.25rem;">I work with teens, working professionals, and couples who feel stuck, overwhelmed by overthinking, or unsure of their next step in life.</p>
+        
+        <p>In a world that constantly tells us who to be, how fast to move, and what success should look like, it is easy to lose touch with our own voice. Many people carry silent pressure, second-guess their instincts, or feel trapped in repetitive cycles of self-doubt.</p>
+        
+        <p>My work is centered around creating a safe, non-judgmental, and confidential space where you can pause, be heard, and examine what's truly going on beneath the surface. Together, we cut through mental clutter to build authentic clarity and grounded confidence — one honest conversation at a time, entirely online.</p>
 
-        <a href="../booking" class="btn btn-primary" style="margin-top:2rem;">Book Your Free Clarity Call</a>
+        <div class="reveal-mask">
+          <h3 class="reveal-heading" style="margin-top:2.5rem;font-size:1.5rem;">How We Work Together</h3>
+        </div>
+        
+        <div class="philosophy-grid" style="margin-top:1rem;margin-bottom:2rem;">
+          <div class="philosophy-col">
+            <h4>Deep, Non-Judgmental Listening</h4>
+            <p>A space where you don't have to perform or have all the answers. You can speak freely about your doubts, fears, and hopes.</p>
+          </div>
+          <div class="philosophy-col">
+            <h4>Untangling Thought Patterns</h4>
+            <p>We explore what expectations, limiting beliefs, or habits are keeping you feeling stuck, helping you see choices you hadn't noticed before.</p>
+          </div>
+        </div>
+
+        <div class="reveal-mask">
+          <h3 class="reveal-heading" style="margin-top:2rem;font-size:1.5rem;">Verified Credentials</h3>
+        </div>
+        <p style="font-size:0.92rem;color:var(--text-muted);margin-bottom:0.75rem;">Click any certificate below to view the full verification scan:</p>
+        
+        <div class="certificate-gallery">
+          <div class="certificate-item" data-cert-view>
+            <img src="../assets/certificates/cert-1.jpg" alt="Coaching Certification 121 — Certificate of Completion (75 Hours)" />
+            <span class="cert-zoom-hint">🔍 Click to zoom</span>
+          </div>
+          <div class="certificate-item" data-cert-view>
+            <img src="../assets/certificates/cert-2.jpg" alt="Certificate of Merit — Coach-Coachee Experience" />
+            <span class="cert-zoom-hint">🔍 Click to zoom</span>
+          </div>
+        </div>
+
+        <div class="graduation-photo-wrap" data-cert-view>
+          <img src="../assets/kajal/graduation-moment.jpg" alt="Kajal Kumari receiving her Coaching Certification at graduation" class="graduation-photo" />
+          <span class="cert-zoom-hint">🔍 Click to zoom</span>
+        </div>
+
+        <div style="margin-top:2.5rem;">
+          <a href="../booking" class="btn btn-primary">Book Your Free Clarity Call</a>
+        </div>
       </div>
     </div>
   </section>
@@ -53,10 +116,14 @@
       <div class="cta-banner-top">
         <img src="../assets/kajal/cta-photo.jpg" alt="Kajal Kumari" class="cta-photo" />
         <div>
-          <h3>Your Clarity Starts With a Conversation</h3>
+          <span class="eyebrow reveal-eyebrow">Ready for Clarity?</span>
+          <div class="reveal-mask">
+            <h3 class="reveal-heading">Your Clarity Starts With a Conversation</h3>
+          </div>
+          <p class="reveal-text" style="max-width:48ch;margin-top:0.4rem;">No pressure, no judgment. A free 30-minute conversation to explore what you're navigating and how coaching can help.</p>
         </div>
       </div>
-      <a href="../booking" class="btn btn-primary">Book Your Free Clarity Call</a>
+      <a href="../booking" class="btn btn-primary reveal-cta">Book Your Free Clarity Call</a>
     </div>
   </section>
 

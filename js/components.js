@@ -78,31 +78,35 @@ function renderHeader() {
       <div class="mobile-scrim" id="mobileScrim" aria-hidden="true"></div>
       <div class="wrap">
         <div class="nav-shell">
-          <a href="${window.SITE_BASE}" class="brand">
+          <a href="${window.SITE_BASE}" class="brand" aria-label="${window.SITE_DATA.consultant.name} Home">
             <img src="${window.SITE_BASE}assets/kajal/portrait.jpg" alt="${window.SITE_DATA.consultant.name}" class="brand-mark" />
             <span class="brand-text">
               <strong>${window.SITE_DATA.consultant.name}</strong>
               <span>${window.SITE_DATA.consultant.title}</span>
             </span>
           </a>
-          <nav class="nav-links" aria-label="Primary">${desktopLinks}</nav>
+          <nav class="nav-links" aria-label="Primary navigation">${desktopLinks}</nav>
           <div class="nav-cta">
             <a href="${window.SITE_BASE}booking" class="btn btn-primary">
               <span class="long">Let's talk →</span><span class="short">Talk</span>
             </a>
-            <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mobilePanel" aria-label="Toggle menu">
-              <span id="navToggleIcon">☰</span>
+            <button class="nav-toggle" id="navToggle" aria-expanded="false" aria-controls="mobilePanel" aria-label="Open menu">
+              <svg id="navToggleIcon" viewBox="0 0 24 24" aria-hidden="true">
+                <line x1="3" y1="12" x2="21" y2="12"></line>
+                <line x1="3" y1="6" x2="21" y2="6"></line>
+                <line x1="3" y1="18" x2="21" y2="18"></line>
+              </svg>
             </button>
           </div>
         </div>
-        <nav class="mobile-panel" id="mobilePanel" aria-label="Mobile">
+        <nav class="mobile-panel" id="mobilePanel" aria-label="Mobile navigation">
           <div class="mobile-panel-head">
             <span class="mobile-panel-title">Menu</span>
             <button class="mobile-panel-close" id="mobilePanelClose" aria-label="Close menu">✕</button>
           </div>
           <div class="mobile-panel-links">${mobileLinks}</div>
           <a href="${window.SITE_BASE}booking" class="btn btn-primary btn-block mobile-panel-cta">
-            Let's talk →
+            Book Free Clarity Call →
           </a>
         </nav>
       </div>
@@ -119,7 +123,10 @@ function renderHeader() {
     panel.classList.add("is-open");
     scrim.classList.add("is-open");
     toggle.setAttribute("aria-expanded", "true");
-    icon.textContent = "✕";
+    toggle.setAttribute("aria-label", "Close menu");
+    if (icon) {
+      icon.innerHTML = '<line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line>';
+    }
     document.body.style.overflow = "hidden";
   }
 
@@ -127,7 +134,10 @@ function renderHeader() {
     panel.classList.remove("is-open");
     scrim.classList.remove("is-open");
     toggle.setAttribute("aria-expanded", "false");
-    icon.textContent = "☰";
+    toggle.setAttribute("aria-label", "Open menu");
+    if (icon) {
+      icon.innerHTML = '<line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line>';
+    }
     document.body.style.overflow = "";
   }
 
@@ -150,7 +160,7 @@ function syncHeaderHeight() {
   const header = document.querySelector(".site-header");
   if (!header) return;
   const apply = () => {
-    const h = header.offsetHeight + 12; // small breathing gap below the pill
+    const h = header.offsetHeight + 10;
     document.documentElement.style.setProperty("--header-h", h + "px");
   };
   apply();
@@ -169,7 +179,7 @@ function renderFooter() {
           <div class="footer-grid">
             <div class="footer-col footer-col--brand">
               <div class="footer-brand-row">
-                <img src="${window.SITE_BASE}assets/kajal/cta-photo.jpg" alt="${window.SITE_DATA.consultant.name}" class="footer-photo" />
+                <img src="${window.SITE_BASE}assets/kajal/portrait.jpg" alt="${window.SITE_DATA.consultant.name}" class="footer-photo" />
                 <span class="brand-text">
                   <strong>${window.SITE_DATA.consultant.name}</strong>
                   <span>${window.SITE_DATA.consultant.title}</span>
@@ -177,26 +187,32 @@ function renderFooter() {
               </div>
               <p class="footer-tagline">A calm, confidential space to gain clarity, confidence, and move forward with intention.</p>
               <a href="mailto:Feelheard2@gmail.com">Feelheard2@gmail.com</a>
-              <a href="tel:+919120192847">+91 91201 92847</a>
-              <p class="footer-address">Online coaching<br/>Available from anywhere, India</p>
+              <a href="https://wa.me/919120192847" target="_blank" rel="noopener noreferrer">+91 91201 92847 (WhatsApp)</a>
+              <p class="footer-address">Online mind & clarity coaching<br/>Available worldwide</p>
             </div>
             <div class="footer-col">
-              <h5>Company</h5>
+              <h5>Navigation</h5>
               ${NAV_LINKS.map((l) => `<a href="${l.href}">${l.label}</a>`).join("")}
             </div>
             <div class="footer-col">
-              <h5>Support</h5>
+              <h5>Get Started</h5>
               <a href="${window.SITE_BASE}booking">Book a Clarity Call</a>
-              <a href="${window.SITE_BASE}booking#faq">FAQs</a>
-              <a href="${window.SITE_BASE}contact">Get in Touch</a>
+              <a href="${window.SITE_BASE}services">Coaching Services</a>
+              <a href="${window.SITE_BASE}booking#faq">Frequently Asked Questions</a>
+              <a href="${window.SITE_BASE}contact">Orientation & Contact Form</a>
             </div>
             <div class="footer-col footer-col--legal">
-              <h5>Legal</h5>
+              <h5>Legal & Safety</h5>
               <a href="${window.SITE_BASE}privacy-policy">Privacy Policy</a>
               <a href="${window.SITE_BASE}terms-of-service">Terms of Service</a>
-              <a href="${window.SITE_BASE}contact">Business Inquiries</a>
+              <a href="${window.SITE_BASE}contact">Client Inquiries</a>
             </div>
           </div>
+
+          <div class="footer-disclaimer">
+            <strong>Coaching Disclaimer:</strong> Coaching provided by Kajal Kumari is focused on personal growth, self-worth, decision-making, and emotional clarity. It is not medical diagnosis, psychiatric care, or clinical psychotherapy. If you are experiencing a mental health emergency, please reach out to licensed healthcare or emergency services.
+          </div>
+
           <div class="footer-bottom">
             <span>© ${year} ${window.SITE_DATA.consultant.name}. All rights reserved.</span>
             <div class="footer-bottom-links">
@@ -207,6 +223,15 @@ function renderFooter() {
         </div>
       </div>
     </footer>
+
+    <!-- Certificate Lightbox Modal Mount -->
+    <div id="certModal" class="cert-modal" role="dialog" aria-modal="true" aria-hidden="true" aria-label="Certificate Viewer">
+      <div class="cert-modal-dialog">
+        <button class="cert-modal-close" id="certModalClose" aria-label="Close certificate viewer">✕</button>
+        <img src="" alt="" class="cert-modal-img" id="certModalImg" />
+        <div class="cert-modal-caption" id="certModalCaption"></div>
+      </div>
+    </div>
   `;
 }
 
