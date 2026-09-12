@@ -1,0 +1,17 @@
+# Serve each page's content at the clean, slash-free URL (200 = rewrite,
+# not a redirect, so the URL bar keeps showing /about, not /about/).
+/about              /about/index.html              200
+/services           /services/index.html           200
+/booking            /booking/index.html            200
+/contact            /contact/index.html            200
+/privacy-policy     /privacy-policy/index.html     200
+/terms-of-service   /terms-of-service/index.html   200
+
+# Redirect old flat .html URLs to the new clean URLs, in case any old
+# links or bookmarks exist.
+/about.html              /about              301
+/services.html           /services           301
+/booking.html            /booking            301
+/contact.html            /contact            301
+/privacy-policy.html     /privacy-policy     301
+/terms-of-service.html   /terms-of-service   301
