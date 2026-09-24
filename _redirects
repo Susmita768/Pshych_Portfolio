@@ -15,3 +15,11 @@
 /contact.html            /contact            301
 /privacy-policy.html     /privacy-policy     301
 /terms-of-service.html   /terms-of-service   301
+
+# Redirect trailing slash URLs to clean URLs
+/about/                  /about              301
+/services/               /services           301
+/booking/                /booking            301
+/contact/                /contact            301
+/privacy-policy/         /privacy-policy     301
+/terms-of-service/       /terms-of-service   301

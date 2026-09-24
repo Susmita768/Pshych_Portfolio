@@ -1,4 +1,4 @@
-# Kajal Kumari — Life & Clarity Coaching Portfolio (Frontend)
+# Kajal Kumari: Life & Clarity Coaching Portfolio (Frontend)
 
 A premium, glassmorphic, calm-first portfolio site for a life coaching
 practice. Pure HTML/CSS/JS — no build step, no dependencies.
@@ -34,11 +34,13 @@ listing servers can't do that, they can only redirect (`/about` →
 
 | URL          | File                  | Purpose                                            |
 |--------------|------------------------|-----------------------------------------------------|
-| `/`          | `index.html`           | Home — hero, "What Is Life Coaching?", areas we can explore |
-| `/about/`    | `about/index.html`     | Kajal's story & certifications — **bio text pending, photos/certs are real** |
-| `/services/` | `services/index.html`  | The 4 coaching packages (Self-Love & Confidence, Career, Corporate, Relationship) |
-| `/booking/`  | `booking/index.html`   | WhatsApp booking CTA + FAQ                            |
-| `/contact/`  | `contact/index.html`   | Contact form + contact details                        |
+| `/`                 | `index.html`                  | Home — hero, "What Is Life Coaching?", areas we can explore |
+| `/about`            | `about/index.html`            | Kajal's story & certifications — **bio text pending, photos/certs are real** |
+| `/services`         | `services/index.html`         | The 4 coaching packages (Self-Love & Confidence, Career, Corporate, Relationship) |
+| `/booking`          | `booking/index.html`          | WhatsApp booking CTA + FAQ                            |
+| `/contact`          | `contact/index.html`          | Contact form + contact details                        |
+| `/privacy-policy`   | `privacy-policy/index.html`   | Privacy policy details                                |
+| `/terms-of-service` | `terms-of-service/index.html` | Terms of service details                              |
 
 ## Structure
 

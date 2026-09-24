@@ -264,7 +264,9 @@ function initAnchorNavigation() {
     }
 
     // Only intercept if on the same page with a hash
-    if (targetUrl.pathname === window.location.pathname && targetUrl.hash) {
+    const cleanTarget = targetUrl.pathname.replace(/\/+$/, "") || "/";
+    const cleanCurrent = window.location.pathname.replace(/\/+$/, "") || "/";
+    if (cleanTarget === cleanCurrent && targetUrl.hash) {
       const target = findAnchorTarget(targetUrl.hash);
       if (target) {
         e.preventDefault();
@@ -309,7 +311,7 @@ function initSpecialtyGrid() {
       <div class="icon-badge" aria-hidden="true">${s.icon}</div>
       <h4>${s.name}</h4>
       <p>${s.desc}</p>
-      <a href="${window.SITE_BASE}booking?area=${s.slug}" class="card-cta" aria-label="${s.ctaText} — book a session about ${s.name}">
+      <a href="${window.SITE_BASE}booking?area=${s.slug}" class="card-cta" aria-label="${s.ctaText}: book a session about ${s.name}">
         <span>${s.ctaText}</span>
         <span aria-hidden="true" class="card-cta-arrow">→</span>
       </a>
@@ -737,7 +739,7 @@ function initContactForm() {
     delete data.cTitle;
 
     if (!data._subject) {
-      data._subject = "New Inquiry — Help Me Get to Know You — Kajal Kumari Life Coaching";
+      data._subject = "New Inquiry: Help Me Get to Know You — Kajal Kumari Life Coaching";
     }
 
     // Step 1: Inline Required-Field Validation

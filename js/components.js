@@ -14,7 +14,21 @@
    This means the whole site keeps working correctly whether it's opened at
    http://localhost:8000/, or nested under something like
    http://127.0.0.1:5500/psych-portfolio/ (e.g. VS Code Live Server). */
+// Clean URL runtime normalizer
+(function normalizeTrailingSlash() {
+  if (typeof window !== "undefined" && window.location && window.history && window.history.replaceState) {
+    var p = window.location.pathname;
+    if (p.length > 1 && p.endsWith("/")) {
+      var clean = p.replace(/\/+$/, "") + window.location.search + window.location.hash;
+      window.history.replaceState(null, "", clean);
+    }
+  }
+})();
+
 function computeSiteBase() {
+  if (window.location.protocol === "http:" || window.location.protocol === "https:") {
+    return "/";
+  }
   const knownSubpages = ["about", "services", "booking", "contact", "privacy-policy", "terms-of-service"];
   const segments = window.location.pathname.split("/").filter(Boolean);
   if (segments[segments.length - 1] === "index.html") segments.pop();
@@ -24,11 +38,11 @@ function computeSiteBase() {
 window.SITE_BASE = computeSiteBase();
 
 const NAV_LINKS = [
-  { href: window.SITE_BASE, label: "Home" },
-  { href: window.SITE_BASE + "about", label: "About" },
-  { href: window.SITE_BASE + "services", label: "Services" },
-  { href: window.SITE_BASE + "booking", label: "Booking" },
-  { href: window.SITE_BASE + "contact", label: "Contact" },
+  { href: window.SITE_BASE === "/" ? "/" : window.SITE_BASE, label: "Home" },
+  { href: window.SITE_BASE === "/" ? "/about" : window.SITE_BASE + "about", label: "About" },
+  { href: window.SITE_BASE === "/" ? "/services" : window.SITE_BASE + "services", label: "Services" },
+  { href: window.SITE_BASE === "/" ? "/booking" : window.SITE_BASE + "booking", label: "Booking" },
+  { href: window.SITE_BASE === "/" ? "/contact" : window.SITE_BASE + "contact", label: "Contact" },
 ];
 
 function currentPage() {
@@ -39,12 +53,11 @@ function currentPage() {
   return knownSubpages.includes(last) ? last : "home";
 }
 
-/* Matches a NAV_LINKS entry's href (which ends in "/" or "about/" etc.)
-   against the currentPage() segment name, independent of the SITE_BASE
-   prefix used to build it. */
+/* Matches a NAV_LINKS entry's href against the currentPage() segment name. */
 function isActiveLink(href, page) {
-  if (page === "home") return href === window.SITE_BASE;
-  return href === window.SITE_BASE + page;
+  if (page === "home") return href === "/" || href === "./" || href === window.SITE_BASE;
+  const cleanHref = href.replace(/\/+$/, "");
+  return cleanHref === "/" + page || cleanHref.endsWith("/" + page);
 }
 
 function renderAmbient() {
