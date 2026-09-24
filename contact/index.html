@@ -52,42 +52,43 @@
         </div>
 
         <form id="contactForm" action="https://formspree.io/f/xyeyvqqz" method="POST" novalidate>
-          <input type="hidden" name="_subject" value="New Inquiry — Help Me Get to Know You — Kajal Kumari Life Coaching" />
+          <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" class="contact-hp" />
+          <input type="hidden" name="_subject" value="New Inquiry: Help Me Get to Know You — Kajal Kumari Life Coaching" />
 
           <p class="form-section-title">A Little About You</p>
           <p class="form-section-desc" style="font-size:0.9rem; color:var(--text-muted); margin-top:-0.5rem; margin-bottom:1.35rem; line-height:1.55;">A few details will help me understand where you are right now and how I can best support you.</p>
           <div class="field">
             <label for="cName">Name <span class="required-star" aria-hidden="true">*</span></label>
-            <input type="text" id="cName" name="name" placeholder="Your name" required />
+            <input type="text" id="cName" name="name" placeholder="Your name" maxlength="100" required />
             <span class="field-error" id="cNameError" role="alert"></span>
           </div>
           <div class="field">
             <label for="cAddress">Home Address <span class="hint">(optional)</span></label>
-            <input type="text" id="cAddress" name="address" placeholder="City, country" />
+            <input type="text" id="cAddress" name="address" placeholder="City, country" maxlength="200" />
           </div>
 
           <p class="form-section-title">Contact Details</p>
           <div class="field-row">
             <div class="field">
               <label for="cMobile">Phone Number <span class="required-star" aria-hidden="true">*</span></label>
-              <input type="tel" id="cMobile" name="mobile" placeholder="Your phone number" required />
+              <input type="tel" id="cMobile" name="mobile" placeholder="Your phone number" maxlength="20" required />
               <span class="field-error" id="cMobileError" role="alert"></span>
             </div>
             <div class="field">
               <label for="cAltContact">Alternate Contact Number <span class="hint">(optional)</span></label>
-              <input type="tel" id="cAltContact" name="altContact" placeholder="Alternate number" />
+              <input type="tel" id="cAltContact" name="altContact" placeholder="Alternate number" maxlength="20" />
             </div>
           </div>
           <div class="field">
             <label for="cEmail">Email Address <span class="required-star" aria-hidden="true">*</span></label>
-            <input type="email" id="cEmail" name="email" placeholder="you@email.com" required />
+            <input type="email" id="cEmail" name="email" placeholder="you@email.com" maxlength="120" required />
             <span class="field-error" id="cEmailError" role="alert"></span>
           </div>
 
           <p class="form-section-title">Employment Information</p>
           <div class="field">
             <label for="cOccupation">Current Occupation <span class="hint">(optional)</span></label>
-            <input type="text" id="cOccupation" name="occupation" placeholder="What do you do?" />
+            <input type="text" id="cOccupation" name="occupation" placeholder="What do you do?" maxlength="150" />
           </div>
 
           <p class="form-section-title">Personal Information</p>
@@ -110,7 +111,7 @@
           </div>
           <div class="field">
             <label for="cReferredBy">Referred By <span class="hint">(optional)</span></label>
-            <input type="text" id="cReferredBy" name="referredBy" placeholder="Who told you about coaching?" />
+            <input type="text" id="cReferredBy" name="referredBy" placeholder="Who told you about coaching?" maxlength="150" />
           </div>
 
           <p class="form-section-title">Session Preference</p>
@@ -175,26 +176,26 @@
           <p class="form-section-title">Tell Me More…</p>
           <div class="field">
             <label for="cValues">How does your value system work? <span class="required-star" aria-hidden="true">*</span></label>
-            <textarea id="cValues" name="valueSystem" placeholder="Share your thoughts…" required></textarea>
+            <textarea id="cValues" name="valueSystem" placeholder="Share your thoughts…" maxlength="5000" required></textarea>
             <span class="field-error" id="cValuesError" role="alert"></span>
           </div>
           <div class="field">
             <label for="cFiveValues">Kindly mention 5 values that you have <span class="required-star" aria-hidden="true">*</span></label>
-            <textarea id="cFiveValues" name="fiveValues" placeholder="e.g. honesty, growth, family, peace, courage…" required></textarea>
+            <textarea id="cFiveValues" name="fiveValues" placeholder="e.g. honesty, growth, family, peace, courage…" maxlength="5000" required></textarea>
             <span class="field-error" id="cFiveValuesError" role="alert"></span>
           </div>
           <div class="field">
             <label for="cAffecting">What is affecting your life currently? <span class="required-star" aria-hidden="true">*</span></label>
-            <textarea id="cAffecting" name="currentlyAffecting" placeholder="Share what's on your mind…" required></textarea>
+            <textarea id="cAffecting" name="currentlyAffecting" placeholder="Share what's on your mind…" maxlength="5000" required></textarea>
             <span class="field-error" id="cAffectingError" role="alert"></span>
           </div>
           <div class="field">
             <label for="cDealing">How are you dealing with it? <span class="hint">(optional)</span></label>
-            <textarea id="cDealing" name="copingWith" placeholder="Share your thoughts…"></textarea>
+            <textarea id="cDealing" name="copingWith" placeholder="Share your thoughts…" maxlength="5000"></textarea>
           </div>
           <div class="field">
             <label for="cSupport">What support or guidance would you like during your first session? <span class="hint">(optional)</span></label>
-            <textarea id="cSupport" name="supportNeeded" placeholder="Share your thoughts…"></textarea>
+            <textarea id="cSupport" name="supportNeeded" placeholder="Share your thoughts…" maxlength="5000"></textarea>
           </div>
 
           <button type="submit" class="btn btn-primary btn-block">Send Orientation Message</button>

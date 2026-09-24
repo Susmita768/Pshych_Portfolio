@@ -138,12 +138,20 @@ const WellnessAPI = {
         body: JSON.stringify(data),
       });
 
+      if (res.status === 429) {
+        return {
+          ok: false,
+          status: 429,
+          error: "Too many requests right now. Please wait a few minutes and try again.",
+        };
+      }
+
       if (res.ok) {
         const json = await res.json().catch(() => ({}));
         return { ok: true, data: json };
       }
 
-      let errorMsg = "Unable to submit your details right now. Please try again or reach out directly.";
+      let errorMsg = "Unable to send your details right now. Please try again or reach out directly.";
       try {
         const errJson = await res.json();
         if (errJson && errJson.errors && Array.isArray(errJson.errors) && errJson.errors.length > 0) {

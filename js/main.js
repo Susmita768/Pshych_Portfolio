@@ -406,21 +406,43 @@ function initWhatsAppBooking() {
   const links = document.querySelectorAll("[data-whatsapp-cta]");
   const wa = window.SITE_DATA.whatsapp;
   const params = new URLSearchParams(window.location.search);
-  const context = params.get("service") || params.get("area");
+  const rawContext = (params.get("service") || params.get("area") || "").trim();
+
+  // Whitelist of valid service/focus slugs
+  const ALLOWED_SERVICES = {
+    "clarity-call": "Free 30-Minute Clarity Call",
+    "individual-counselling": "Individual Counselling",
+    "career-academic-stress": "Career & Academic Stress",
+    "emotional-resilience": "Emotional Resilience",
+    "stress-anxiety": "Stress & Anxiety Management",
+    "workplace-burnout": "Workplace Burnout & Balance",
+    "relationship-dynamics": "Relationship Dynamics",
+    "life-transitions": "Life Transitions & Direction",
+    "personal-growth": "Personal Growth & Self-Worth"
+  };
 
   let defaultMsg = wa.defaultMessage;
-  if (context) {
-    const label = context.replace(/-/g, " ");
-    defaultMsg = `Hi Kajal, I'd like to book my free 30-minute Clarity Call — I'm interested in ${label}.`;
+  if (rawContext && /^[a-zA-Z0-9-]{2,60}$/.test(rawContext)) {
+    const matchedLabel = ALLOWED_SERVICES[rawContext] || rawContext.replace(/-/g, " ");
+    defaultMsg = `Hi Kajal, I'd like to book my free 30-minute Clarity Call — I'm interested in ${matchedLabel}.`;
 
-    // If there is a context display mount on the booking page, show it
+    // If there is a context display mount on the booking page, show it safely using textContent
     const contextNotice = document.getElementById("bookingContextNotice");
     if (contextNotice) {
-      contextNotice.innerHTML = `
-        <div class="booking-context-tag" data-reveal>
-          <span>Selected focus:</span> <strong>${label.charAt(0).toUpperCase() + label.slice(1)}</strong>
-        </div>
-      `;
+      contextNotice.textContent = "";
+      const tag = document.createElement("div");
+      tag.className = "booking-context-tag";
+      tag.setAttribute("data-reveal", "");
+
+      const labelSpan = document.createElement("span");
+      labelSpan.textContent = "Selected focus: ";
+
+      const strongEl = document.createElement("strong");
+      strongEl.textContent = matchedLabel;
+
+      tag.appendChild(labelSpan);
+      tag.appendChild(strongEl);
+      contextNotice.appendChild(tag);
     }
   }
 
@@ -651,9 +673,71 @@ function initContactForm() {
   const form = document.getElementById("contactForm");
   if (!form) return;
   const status = document.getElementById("contactStatus");
-  let isSubmitting = false;
+  const submitBtn = form.querySelector('button[type="submit"]');
+  const originalBtnText = submitBtn ? submitBtn.textContent.trim() : "Send Orientation Message";
 
-  // Helper to show or clear field-specific inline error
+  let isSubmitting = false;
+  let isSubmitted = false;
+
+  // Rate Limiting Configuration: Max 5 submissions in rolling 10-minute window
+  const RATE_LIMIT_CONFIG = {
+    storageKey: "feelheard_cf_attempts",
+    maxAttempts: 5,
+    windowMs: 10 * 60 * 1000 // 10 minutes
+  };
+
+  function getRecentSubmissionAttempts() {
+    try {
+      const raw = sessionStorage.getItem(RATE_LIMIT_CONFIG.storageKey);
+      if (!raw) return [];
+      const parsed = JSON.parse(raw);
+      if (!Array.isArray(parsed)) return [];
+      const now = Date.now();
+      // Keep only strictly numeric timestamps within the rolling window
+      return parsed.filter((ts) => typeof ts === "number" && !isNaN(ts) && (now - ts) < RATE_LIMIT_CONFIG.windowMs);
+    } catch (_) {
+      return [];
+    }
+  }
+
+  function recordSubmissionAttempt() {
+    try {
+      const attempts = getRecentSubmissionAttempts();
+      attempts.push(Date.now());
+      sessionStorage.setItem(RATE_LIMIT_CONFIG.storageKey, JSON.stringify(attempts));
+    } catch (_) {}
+  }
+
+  function getRateLimitCooldown() {
+    const attempts = getRecentSubmissionAttempts();
+    if (attempts.length >= RATE_LIMIT_CONFIG.maxAttempts) {
+      const oldest = Math.min(...attempts);
+      const msRemaining = Math.max(0, (oldest + RATE_LIMIT_CONFIG.windowMs) - Date.now());
+      const minutesRemaining = Math.ceil(msRemaining / (60 * 1000));
+      return { isBlocked: true, minutesRemaining: minutesRemaining || 1 };
+    }
+    return { isBlocked: false, minutesRemaining: 0 };
+  }
+
+  // 3-State Submit Button Controller: normal, submitting, blocked
+  function setSubmitButtonState(state) {
+    if (!submitBtn || isSubmitted) return;
+    if (state === "submitting") {
+      submitBtn.disabled = true;
+      submitBtn.setAttribute("aria-busy", "true");
+      submitBtn.textContent = "Sending…";
+    } else if (state === "blocked") {
+      submitBtn.disabled = true;
+      submitBtn.removeAttribute("aria-busy");
+      submitBtn.textContent = "Please wait";
+    } else {
+      submitBtn.disabled = false;
+      submitBtn.removeAttribute("aria-busy");
+      submitBtn.textContent = originalBtnText;
+    }
+  }
+
+  // Helper to show or clear field-specific inline error using safe textContent
   function setFieldError(fieldId, errorMsg) {
     const el = document.getElementById(fieldId);
     if (!el) return null;
@@ -670,14 +754,47 @@ function initContactForm() {
 
     if (errorMsg) {
       field.classList.add("has-error");
-      errEl.innerHTML = `
-        <svg class="field-error-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-          <circle cx="8" cy="8" r="7"></circle>
-          <line x1="8" y1="5" x2="8" y2="8.5"></line>
-          <circle cx="8" cy="11.5" r="0.75" fill="currentColor"></circle>
-        </svg>
-        <span>${errorMsg}</span>
-      `;
+      errEl.textContent = "";
+
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("class", "field-error-icon");
+      svg.setAttribute("viewBox", "0 0 16 16");
+      svg.setAttribute("width", "14");
+      svg.setAttribute("height", "14");
+      svg.setAttribute("fill", "none");
+      svg.setAttribute("stroke", "currentColor");
+      svg.setAttribute("stroke-width", "2");
+      svg.setAttribute("stroke-linecap", "round");
+      svg.setAttribute("stroke-linejoin", "round");
+      svg.setAttribute("aria-hidden", "true");
+
+      const circle1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      circle1.setAttribute("cx", "8");
+      circle1.setAttribute("cy", "8");
+      circle1.setAttribute("r", "7");
+
+      const line = document.createElementNS("http://www.w3.org/2000/svg", "line");
+      line.setAttribute("x1", "8");
+      line.setAttribute("y1", "5");
+      line.setAttribute("x2", "8");
+      line.setAttribute("y2", "8.5");
+
+      const circle2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+      circle2.setAttribute("cx", "8");
+      circle2.setAttribute("cy", "11.5");
+      circle2.setAttribute("r", "0.75");
+      circle2.setAttribute("fill", "currentColor");
+
+      svg.appendChild(circle1);
+      svg.appendChild(line);
+      svg.appendChild(circle2);
+
+      const span = document.createElement("span");
+      span.textContent = errorMsg;
+
+      errEl.appendChild(svg);
+      errEl.appendChild(span);
+
       if (fieldId === "cTimeSlot") {
         return document.getElementById("customTimeSlotTrigger") || el;
       }
@@ -710,57 +827,116 @@ function initContactForm() {
     { id: "cValues", event: "input" },
     { id: "cFiveValues", event: "input" },
     { id: "cAffecting", event: "input" },
+    { id: "cDealing", event: "input" },
+    { id: "cSupport", event: "input" }
   ];
   inputListeners.forEach(({ id, event }) => {
     const el = document.getElementById(id);
     if (el) {
-      el.addEventListener(event, () => clearFieldError(id));
+      el.addEventListener(event, () => {
+        clearFieldError(id);
+        // If cooldown has expired while user was editing, restore submit button
+        if (!isSubmitting && !isSubmitted) {
+          const cooldown = getRateLimitCooldown();
+          if (!cooldown.isBlocked && submitBtn && submitBtn.disabled && submitBtn.textContent === "Please wait") {
+            setSubmitButtonState("normal");
+          }
+        }
+      });
     }
   });
+
+  // Prevent Enter-key duplicate submission while submitting or after completion
+  form.addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && (isSubmitting || isSubmitted)) {
+      e.preventDefault();
+    }
+  });
+
+  // Strict whitelist for Preferred Time Slot (rejects DevTools tampering)
+  const ALLOWED_TIME_SLOTS = [
+    "10:00am – 11:00am",
+    "11:00am – 12:00pm",
+    "12:00pm – 1:00pm",
+    "1:00pm – 2:00pm",
+    "3:00pm – 4:00pm",
+    "5:00pm – 6:00pm"
+  ];
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Prevent duplicate submissions if request is already in-flight
-    if (isSubmitting) return;
+    // Prevent duplicate submissions if already in-flight or already submitted
+    if (isSubmitting || isSubmitted) return;
 
-    const submitBtn = form.querySelector('button[type="submit"]');
-    const originalBtnText = submitBtn ? submitBtn.textContent : "Send Orientation Message";
+    // Check Honeypot spam field (_gotcha)
+    const gotcha = form.querySelector('[name="_gotcha"]');
+    if (gotcha && gotcha.value.trim().length > 0) {
+      // Automated bot detected: do not call Formspree, do not open WhatsApp
+      setStatus(status, "success", "Thank you! Your orientation request has been submitted.");
+      return;
+    }
 
-    // Gather all form fields (excluding any title fields)
+    // Check Client-Side Anti-Spam Rate Limit (5 attempts per rolling 10-minute window)
+    const cooldown = getRateLimitCooldown();
+    if (cooldown.isBlocked) {
+      setSubmitButtonState("blocked");
+      setStatus(
+        status,
+        "error",
+        "You're sending requests a little too quickly. Please wait a few minutes before trying again."
+      );
+      // Auto-unlock button after cooldown expires
+      setTimeout(() => {
+        if (!isSubmitting && !isSubmitted) {
+          const checkAgain = getRateLimitCooldown();
+          if (!checkAgain.isBlocked) {
+            setSubmitButtonState("normal");
+          }
+        }
+      }, cooldown.minutesRemaining * 60 * 1000);
+      return;
+    }
+
+    // Gather form fields
     const formData = new FormData(form);
     const data = {};
     formData.forEach((value, key) => {
-      if (key !== "title" && key !== "cTitle") {
+      if (key !== "title" && key !== "cTitle" && key !== "_gotcha") {
         data[key] = typeof value === "string" ? value.trim() : value;
       }
     });
-    delete data.title;
-    delete data.cTitle;
 
     if (!data._subject) {
       data._subject = "New Inquiry: Help Me Get to Know You — Kajal Kumari Life Coaching";
     }
 
-    // Step 1: Inline Required-Field Validation
+    // Step 1: Input Validation
     let firstInvalidEl = null;
 
-    // 1. Name
-    if (!data.name) {
+    // 1. Name: 2–100 characters, Unicode letters & standard punctuation
+    const nameVal = (data.name || "").trim();
+    if (!nameVal) {
       const el = setFieldError("cName", "Please enter your name.");
+      if (!firstInvalidEl) firstInvalidEl = el;
+    } else if (nameVal.length < 2 || nameVal.length > 100) {
+      const el = setFieldError("cName", "Name must be between 2 and 100 characters.");
+      if (!firstInvalidEl) firstInvalidEl = el;
+    } else if (!/^[\p{L}\p{M}\s'.,&()\-]+$/u.test(nameVal)) {
+      const el = setFieldError("cName", "Please enter a valid name.");
       if (!firstInvalidEl) firstInvalidEl = el;
     } else {
       clearFieldError("cName");
     }
 
-    // 2. Phone Number
+    // 2. Phone Number: valid Indian phone format (10-13 digits)
     const phoneRaw = (data.mobile || data.phone || "").trim();
     const phoneDigits = phoneRaw.replace(/\D/g, "");
     if (!phoneRaw) {
       const el = setFieldError("cMobile", "Please enter your phone number.");
       if (!firstInvalidEl) firstInvalidEl = el;
     } else if (phoneDigits.length < 10 || phoneDigits.length > 13) {
-      const el = setFieldError("cMobile", "Please enter a valid phone number.");
+      const el = setFieldError("cMobile", "Please enter a valid phone number (10 digits).");
       if (!firstInvalidEl) firstInvalidEl = el;
     } else {
       let coreDigits = phoneDigits;
@@ -768,6 +944,8 @@ function initContactForm() {
         coreDigits = phoneDigits.slice(2);
       } else if (phoneDigits.length === 11 && phoneDigits.startsWith("0")) {
         coreDigits = phoneDigits.slice(1);
+      } else if (phoneDigits.length === 13 && phoneDigits.startsWith("091")) {
+        coreDigits = phoneDigits.slice(3);
       }
       if (coreDigits.length === 10 && /^[5-9]\d{9}$/.test(coreDigits)) {
         clearFieldError("cMobile");
@@ -779,51 +957,78 @@ function initContactForm() {
       }
     }
 
-    // 3. Email Address
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
-    if (!data.email) {
+    // 3. Email Address: valid format & max 120 characters
+    const emailVal = (data.email || "").trim();
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+    if (!emailVal) {
       const el = setFieldError("cEmail", "Please enter your email address.");
       if (!firstInvalidEl) firstInvalidEl = el;
-    } else if (!emailRegex.test(data.email)) {
+    } else if (emailVal.length > 120 || !emailRegex.test(emailVal)) {
       const el = setFieldError("cEmail", "Please enter a valid email address.");
       if (!firstInvalidEl) firstInvalidEl = el;
     } else {
       clearFieldError("cEmail");
     }
 
-    // 4. Preferred Time Slot
-    if (!data.timeSlot) {
+    // 4. Preferred Time Slot: strict whitelist check against allowed options
+    const slotVal = (data.timeSlot || "").trim();
+    if (!slotVal) {
       const el = setFieldError("cTimeSlot", "Please select your preferred time slot.");
+      if (!firstInvalidEl) firstInvalidEl = el;
+    } else if (!ALLOWED_TIME_SLOTS.includes(slotVal)) {
+      const el = setFieldError("cTimeSlot", "Please select a valid time slot from the provided options.");
       if (!firstInvalidEl) firstInvalidEl = el;
     } else {
       clearFieldError("cTimeSlot");
     }
 
-    // 5. How does your value system work?
-    if (!data.valueSystem) {
+    // 5. How does your value system work? (5–4,000 characters)
+    const valSys = (data.valueSystem || "").trim();
+    if (!valSys) {
       const el = setFieldError("cValues", "Please share how your value system works.");
+      if (!firstInvalidEl) firstInvalidEl = el;
+    } else if (valSys.length < 5) {
+      const el = setFieldError("cValues", "Please provide a little more detail (at least 5 characters).");
+      if (!firstInvalidEl) firstInvalidEl = el;
+    } else if (valSys.length > 4000) {
+      const el = setFieldError("cValues", "Please keep your response under 4,000 characters.");
       if (!firstInvalidEl) firstInvalidEl = el;
     } else {
       clearFieldError("cValues");
     }
 
-    // 6. Kindly mention 5 values that you have
-    if (!data.fiveValues) {
+    // 6. Kindly mention 5 values that you have (5–4,000 characters)
+    const fiveVal = (data.fiveValues || "").trim();
+    if (!fiveVal) {
       const el = setFieldError("cFiveValues", "Please mention 5 values that are important to you.");
+      if (!firstInvalidEl) firstInvalidEl = el;
+    } else if (fiveVal.length < 5) {
+      const el = setFieldError("cFiveValues", "Please provide a little more detail (at least 5 characters).");
+      if (!firstInvalidEl) firstInvalidEl = el;
+    } else if (fiveVal.length > 4000) {
+      const el = setFieldError("cFiveValues", "Please keep your response under 4,000 characters.");
       if (!firstInvalidEl) firstInvalidEl = el;
     } else {
       clearFieldError("cFiveValues");
     }
 
-    // 7. What is affecting your life currently?
-    if (!data.currentlyAffecting) {
+    // 7. What is affecting your life currently? (5–5,000 characters)
+    const affectVal = (data.currentlyAffecting || "").trim();
+    if (!affectVal) {
       const el = setFieldError("cAffecting", "Please tell us what is affecting your life currently.");
+      if (!firstInvalidEl) firstInvalidEl = el;
+    } else if (affectVal.length < 5) {
+      const el = setFieldError("cAffecting", "Please provide a little more detail (at least 5 characters).");
+      if (!firstInvalidEl) firstInvalidEl = el;
+    } else if (affectVal.length > 5000) {
+      const el = setFieldError("cAffecting", "Please keep your response under 5,000 characters.");
       if (!firstInvalidEl) firstInvalidEl = el;
     } else {
       clearFieldError("cAffecting");
     }
 
-    // If any validation failed, preserve form data and auto-focus/scroll to first problem field
+    // If validation fails, preserve form data and auto-focus/scroll to first problem field
+    // Note: Validation failures DO NOT consume a rate-limit slot
     if (firstInvalidEl) {
       firstInvalidEl.scrollIntoView({ behavior: "smooth", block: "center" });
       setTimeout(() => {
@@ -841,24 +1046,26 @@ function initContactForm() {
     // Normalize phone & preferred time slot keys for Formspree
     data.phone = phoneRaw;
     data.mobile = phoneRaw;
-    data.preferredTimeSlot = data.timeSlot;
+    data.preferredTimeSlot = slotVal;
 
-    // Step 2: Prevent duplicate submission and set loading state
+    // Step 2: Record attempt timestamp & enter SUBMITTING state
+    recordSubmissionAttempt();
     isSubmitting = true;
-    if (submitBtn) {
-      submitBtn.disabled = true;
-      submitBtn.setAttribute("aria-busy", "true");
-      submitBtn.textContent = "Sending…";
-    }
+    setSubmitButtonState("submitting");
 
     // Step 3: Send data to Formspree via AJAX
     const res = await window.WellnessAPI.submitContact(data);
 
     // Step 4: Handle Result
     if (res.ok) {
+      isSubmitting = false;
+      isSubmitted = true;
       if (submitBtn) {
+        submitBtn.disabled = true;
+        submitBtn.removeAttribute("aria-busy");
         submitBtn.textContent = "✓ Message Sent";
       }
+
       setStatus(
         status,
         "success",
@@ -875,8 +1082,8 @@ function initContactForm() {
       // Official client WhatsApp number
       const waNumber = (window.SITE_DATA && window.SITE_DATA.whatsapp && window.SITE_DATA.whatsapp.number) || "917808235383";
       let waMsg = "Hi Kajal, I’ve just submitted the orientation form on your website and would love to connect.";
-      if (data.timeSlot) {
-        waMsg += ` My preferred time slot is ${data.timeSlot} (IST).`;
+      if (data.preferredTimeSlot) {
+        waMsg += ` My preferred time slot is ${data.preferredTimeSlot} (IST).`;
       }
       waMsg += " Please let me know the next steps when convenient. Thank you!";
 
@@ -887,18 +1094,24 @@ function initContactForm() {
         window.location.href = waUrl;
       }, 1800);
     } else {
-      // Submission failure: restore button, keep form data intact, display calm error message
+      // Submission failure: do NOT open WhatsApp, keep form data intact, display calm error message
       isSubmitting = false;
-      if (submitBtn) {
-        submitBtn.disabled = false;
-        submitBtn.removeAttribute("aria-busy");
-        submitBtn.textContent = originalBtnText;
+
+      if (res.status === 429) {
+        setSubmitButtonState("blocked");
+        setStatus(
+          status,
+          "error",
+          "Too many requests right now. Please wait a few minutes and try again."
+        );
+      } else {
+        setSubmitButtonState("normal");
+        setStatus(
+          status,
+          "error",
+          res.error || "Unable to send your details right now. Please try again or reach out directly."
+        );
       }
-      setStatus(
-        status,
-        "error",
-        res.error || "Unable to send your details right now. Please try again or reach out directly."
-      );
     }
   });
 }
