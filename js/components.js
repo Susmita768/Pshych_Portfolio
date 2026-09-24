@@ -79,7 +79,7 @@ function renderHeader() {
       <div class="wrap">
         <div class="nav-shell">
           <a href="${window.SITE_BASE}" class="brand" aria-label="${window.SITE_DATA.consultant.name} Home">
-            <img src="${window.SITE_BASE}assets/kajal/portrait.jpg" alt="${window.SITE_DATA.consultant.name}" class="brand-mark" />
+            <img src="${window.SITE_BASE}assets/kajal/portrait.jpg" alt="${window.SITE_DATA.consultant.name}" class="brand-mark" width="40" height="40" decoding="async" />
             <span class="brand-text">
               <strong>${window.SITE_DATA.consultant.name}</strong>
               <span>${window.SITE_DATA.consultant.title}</span>
@@ -159,12 +159,40 @@ function renderHeader() {
 function syncHeaderHeight() {
   const header = document.querySelector(".site-header");
   if (!header) return;
+  let lastH = 0;
+  let ticking = false;
+
   const apply = () => {
     const h = header.offsetHeight + 10;
-    document.documentElement.style.setProperty("--header-h", h + "px");
+    if (Math.abs(h - lastH) >= 1) {
+      lastH = h;
+      document.documentElement.style.setProperty("--header-h", h + "px");
+    }
   };
+
   apply();
-  window.addEventListener("resize", apply);
+
+  window.addEventListener("resize", () => {
+    if (!ticking) {
+      requestAnimationFrame(() => {
+        apply();
+        // Ensure mobile menu properly resets if resized to desktop
+        if (window.innerWidth > 820) {
+          const panel = document.getElementById("mobilePanel");
+          const scrim = document.getElementById("mobileScrim");
+          const toggle = document.getElementById("navToggle");
+          if (panel && panel.classList.contains("is-open")) {
+            panel.classList.remove("is-open");
+            if (scrim) scrim.classList.remove("is-open");
+            if (toggle) toggle.setAttribute("aria-expanded", "false");
+            document.body.style.overflow = "";
+          }
+        }
+        ticking = false;
+      });
+      ticking = true;
+    }
+  }, { passive: true });
 }
 
 function renderFooter() {
@@ -179,7 +207,7 @@ function renderFooter() {
           <div class="footer-grid">
             <div class="footer-col footer-col--brand">
               <div class="footer-brand-row">
-                <img src="${window.SITE_BASE}assets/kajal/portrait.jpg" alt="${window.SITE_DATA.consultant.name}" class="footer-photo" />
+                <img src="${window.SITE_BASE}assets/kajal/portrait.jpg" alt="${window.SITE_DATA.consultant.name}" class="footer-photo" width="52" height="52" loading="lazy" decoding="async" />
                 <span class="brand-text">
                   <strong>${window.SITE_DATA.consultant.name}</strong>
                   <span>${window.SITE_DATA.consultant.title}</span>

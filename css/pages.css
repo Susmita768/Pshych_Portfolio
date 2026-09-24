@@ -487,11 +487,11 @@
     background 0.22s ease,
     border-color 0.22s ease,
     color 0.22s ease;
-  will-change: transform, box-shadow;
   min-height: 52px;
 }
 
 .btn-connect:hover {
+  will-change: transform;
   transform: translateY(-2px);
   background: linear-gradient(150deg, rgba(226, 243, 233, 0.96) 0%, rgba(252, 254, 253, 0.98) 100%);
   border-color: rgba(36, 106, 72, 0.50);

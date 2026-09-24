@@ -68,6 +68,8 @@ function choreographSection(section, baseDelay = 0) {
 }
 
 /* ---- Scroll reveal observer ---- */
+let revealObserver = null;
+
 function initScrollReveal() {
   const isReduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   const sections = document.querySelectorAll("section.wrap, .page-hero, [data-reveal]");
@@ -78,21 +80,23 @@ function initScrollReveal() {
     return;
   }
 
-  const observer = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          choreographSection(entry.target, 0);
-          observer.unobserve(entry.target);
-        }
-      });
-    },
-    { threshold: 0.14, rootMargin: "0px 0px -40px 0px" }
-  );
+  if (!revealObserver) {
+    revealObserver = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            choreographSection(entry.target, 0);
+            revealObserver.unobserve(entry.target);
+          }
+        });
+      },
+      { threshold: 0.10, rootMargin: "0px 0px -30px 0px" }
+    );
+  }
 
   sections.forEach((s) => {
     if (!s.classList.contains("is-revealed")) {
-      observer.observe(s);
+      revealObserver.observe(s);
     }
   });
 }
@@ -154,7 +158,21 @@ function initAnchorNavigation() {
     return Math.max(0, Math.round(rect.top + currentScrollY - (headerH + 20)));
   }
 
+  let activeGlideRaf = null;
+
+  function cancelActiveGlide() {
+    if (activeGlideRaf !== null) {
+      cancelAnimationFrame(activeGlideRaf);
+      activeGlideRaf = null;
+    }
+  }
+
+  window.addEventListener("wheel", cancelActiveGlide, { passive: true });
+  window.addEventListener("touchstart", cancelActiveGlide, { passive: true });
+
   function smoothGlide(targetY, onApproaching, onSettled) {
+    cancelActiveGlide();
+
     if (isReduced) {
       window.scrollTo(0, targetY);
       if (onApproaching) onApproaching();
@@ -196,15 +214,16 @@ function initAnchorNavigation() {
       }
 
       if (elapsed < duration) {
-        requestAnimationFrame(step);
+        activeGlideRaf = requestAnimationFrame(step);
       } else {
+        activeGlideRaf = null;
         window.scrollTo(0, targetY);
         if (!approachingFired && onApproaching) onApproaching();
         if (onSettled) onSettled();
       }
     }
 
-    requestAnimationFrame(step);
+    activeGlideRaf = requestAnimationFrame(step);
   }
 
   function executeSectionGlideAndReveal(target, hash) {
@@ -312,7 +331,7 @@ function initServicesDetail() {
     <article class="glass service-detail reveal-card" data-reveal style="transition-delay:${i * 65}ms">
       <div>
         <div class="service-photo-frame">
-          <img src="${window.SITE_BASE}${s.photo}" alt="${s.name} coaching session" />
+          <img src="${window.SITE_BASE}${s.photo}" alt="${s.name} coaching session" loading="lazy" decoding="async" />
         </div>
         <span class="eyebrow" style="margin-top:1.25rem;">Coaching Program 0${i + 1}</span>
         <h3 style="margin-top:0.4rem;font-size:clamp(1.3rem, 1.8vw, 1.7rem);">${s.name}</h3>
