@@ -799,6 +799,253 @@
   }
 }
 .about-body p { margin-bottom: 1.2rem; line-height: 1.7; font-size: 1.02rem; }
+/* ---- Verified Credentials Expandable Section ---- */
+.credentials-section-wrap {
+  margin-top: 2.25rem;
+  margin-bottom: 2rem;
+}
+
+.verify-credentials-card {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+  max-width: 560px;
+  padding: 1.05rem 1.35rem;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(247, 246, 252, 0.90) 100%);
+  border: 1px solid rgba(71, 71, 117, 0.16);
+  border-radius: var(--radius-md);
+  box-shadow: 0 4px 18px rgba(13, 12, 61, 0.05), 0 1px 3px rgba(13, 12, 61, 0.03);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  cursor: pointer;
+  text-align: left;
+  font-family: inherit;
+  transition: all 0.28s var(--ease-soft);
+  position: relative;
+  overflow: hidden;
+}
+
+.verify-credentials-card:hover {
+  border-color: rgba(71, 71, 117, 0.32);
+  box-shadow: 0 8px 26px rgba(13, 12, 61, 0.08), 0 2px 6px rgba(13, 12, 61, 0.04);
+  transform: translateY(-2px);
+  background: linear-gradient(135deg, #ffffff 0%, rgba(245, 244, 252, 0.95) 100%);
+}
+
+.verify-credentials-card:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(71, 71, 117, 0.22), 0 8px 24px rgba(13, 12, 61, 0.08);
+}
+
+.verify-credentials-card.is-active {
+  border-color: rgba(36, 106, 72, 0.32);
+  background: linear-gradient(135deg, #ffffff 0%, rgba(242, 248, 244, 0.75) 100%);
+}
+
+.verify-card-lead {
+  display: flex;
+  align-items: center;
+  gap: 0.95rem;
+  min-width: 0;
+}
+
+.verify-badge-emerald {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--emerald-soft, #eaf4ee);
+  border: 1px solid var(--emerald-border, rgba(36, 106, 72, 0.24));
+  color: var(--emerald, #246a48);
+  flex-shrink: 0;
+  transition: transform 0.25s var(--ease-soft);
+}
+
+.verify-credentials-card:hover .verify-badge-emerald {
+  transform: scale(1.06);
+}
+
+.verify-card-text {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.verify-card-title-row {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.verify-card-title {
+  font-family: var(--font-body);
+  font-size: 1.02rem;
+  font-weight: 700;
+  color: var(--ink);
+  letter-spacing: -0.01em;
+  line-height: 1.3;
+}
+
+.verify-card-pill {
+  display: inline-flex;
+  align-items: center;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--emerald, #246a48);
+  background: rgba(36, 106, 72, 0.09);
+  padding: 0.15rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(36, 106, 72, 0.16);
+  letter-spacing: 0.02em;
+}
+
+.verify-card-subtitle {
+  font-size: 0.84rem;
+  color: var(--text-muted);
+  margin-top: 0.2rem;
+  line-height: 1.4;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.verify-card-action {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: var(--accent);
+  font-size: 0.88rem;
+  font-weight: 600;
+  flex-shrink: 0;
+  padding-left: 0.5rem;
+}
+
+.verify-action-status {
+  white-space: nowrap;
+}
+
+.verify-chevron {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.verify-credentials-card[aria-expanded="true"] .verify-chevron {
+  transform: rotate(180deg);
+}
+
+/* Collapsible Panel with smooth CSS Grid height transition */
+.credentials-expandable-panel {
+  display: grid;
+  grid-template-rows: 0fr;
+  opacity: 0;
+  visibility: hidden;
+  transition: grid-template-rows 0.42s cubic-bezier(0.16, 1, 0.3, 1),
+              opacity 0.35s ease,
+              visibility 0.42s ease,
+              margin 0.3s ease;
+  margin-top: 0;
+}
+
+.credentials-expandable-panel.is-expanded {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
+  margin-top: 1.25rem;
+}
+
+.credentials-panel-content {
+  min-height: 0;
+  overflow: hidden;
+}
+
+.credentials-panel-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  padding: 0.65rem 0.95rem;
+  background: rgba(255, 255, 255, 0.7);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius-sm);
+  margin-bottom: 1rem;
+}
+
+.credentials-panel-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.82rem;
+  color: var(--text-muted);
+}
+
+.btn-hide-credentials {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.3rem 0.75rem;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  background: rgba(71, 71, 117, 0.08);
+  border: 1px solid rgba(71, 71, 117, 0.15);
+  border-radius: 999px;
+  cursor: pointer;
+  transition: all 0.2s var(--ease-soft);
+  font-family: inherit;
+}
+
+.btn-hide-credentials:hover {
+  background: rgba(71, 71, 117, 0.15);
+  color: var(--ink);
+  transform: translateY(-1px);
+}
+
+.btn-hide-credentials:focus-visible {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(71, 71, 117, 0.2);
+}
+
+@media (max-width: 560px) {
+  .verify-credentials-card {
+    padding: 0.9rem 1rem;
+    gap: 0.75rem;
+  }
+  .verify-card-lead {
+    gap: 0.75rem;
+  }
+  .verify-card-title {
+    font-size: 0.96rem;
+  }
+  .verify-card-pill {
+    display: none;
+  }
+  .verify-card-subtitle {
+    font-size: 0.79rem;
+    white-space: normal;
+  }
+  .verify-action-status {
+    display: none;
+  }
+  .credentials-panel-toolbar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.5rem;
+  }
+  .btn-hide-credentials {
+    align-self: flex-end;
+  }
+}
+
 .certificate-gallery {
   display: flex;
   gap: 1.25rem;

@@ -83,25 +83,71 @@
           </div>
         </div>
 
-        <div class="reveal-mask">
-          <h3 class="reveal-heading" style="margin-top:2rem;font-size:1.5rem;">Verified Credentials</h3>
-        </div>
-        <p style="font-size:0.92rem;color:var(--text-muted);margin-bottom:0.75rem;">Click any certificate below to view the full verification scan:</p>
-        
-        <div class="certificate-gallery">
-          <div class="certificate-item" data-cert-view>
-            <img src="../assets/certificates/cert-1.jpg" alt="Coaching Certification 121 — Certificate of Completion (75 Hours)" />
-            <span class="cert-zoom-hint">🔍 Click to zoom</span>
+        <div class="credentials-section-wrap">
+          <div class="reveal-mask">
+            <h3 class="reveal-heading" style="margin-top:2rem;font-size:1.5rem;">Verified Credentials</h3>
           </div>
-          <div class="certificate-item" data-cert-view>
-            <img src="../assets/certificates/cert-2.jpg" alt="Certificate of Merit — Coach-Coachee Experience" />
-            <span class="cert-zoom-hint">🔍 Click to zoom</span>
-          </div>
-        </div>
+          <p style="font-size:0.92rem;color:var(--text-muted);margin-bottom:1.15rem;line-height:1.55;">Formal training and verified credentials from recognized coaching institutions. Official completion scans are available on request below.</p>
 
-        <div class="graduation-photo-wrap" data-cert-view>
-          <img src="../assets/kajal/graduation-moment.jpg" alt="Kajal Kumari receiving her Coaching Certification at graduation" class="graduation-photo" />
-          <span class="cert-zoom-hint">🔍 Click to zoom</span>
+          <!-- Expandable Verification Control -->
+          <button type="button" class="verify-credentials-card" id="btnVerifyCredentials" aria-expanded="false" aria-controls="credentialsPanel">
+            <div class="verify-card-lead">
+              <span class="verify-badge-emerald" aria-hidden="true">
+                <svg viewBox="0 0 20 20" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="M4.5 10.5l3.5 3.5L15.5 6"></path>
+                </svg>
+              </span>
+              <div class="verify-card-text">
+                <div class="verify-card-title-row">
+                  <span class="verify-card-title">Verify Credentials</span>
+                  <span class="verify-card-pill">Official Verification</span>
+                </div>
+                <span class="verify-card-subtitle">View certificates &amp; verification scans</span>
+              </div>
+            </div>
+            <div class="verify-card-action">
+              <span class="verify-action-status" id="verifyActionStatus">View Credentials</span>
+              <span class="verify-chevron" aria-hidden="true">
+                <svg viewBox="0 0 20 20" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                  <polyline points="6 8 10 12 14 8"></polyline>
+                </svg>
+              </span>
+            </div>
+          </button>
+
+          <!-- Collapsible Panel (Initially Hidden) -->
+          <div class="credentials-expandable-panel" id="credentialsPanel" aria-hidden="true">
+            <div class="credentials-panel-content">
+              <div class="credentials-panel-toolbar">
+                <span class="credentials-panel-indicator">
+                  <svg viewBox="0 0 16 16" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="8" cy="8" r="7"></circle><line x1="8" y1="5" x2="8" y2="8.5"></line><circle cx="8" cy="11.5" r="0.75" fill="currentColor"></circle></svg>
+                  <span>Click any certificate below to view full-resolution scan</span>
+                </span>
+                <button type="button" class="btn-hide-credentials" id="btnHideCredentials" aria-label="Hide credentials">
+                  <span>Hide Credentials</span>
+                  <svg viewBox="0 0 16 16" width="12" height="12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="4 10 8 6 12 10"></polyline>
+                  </svg>
+                </button>
+              </div>
+
+              <div class="certificate-gallery">
+                <div class="certificate-item" data-cert-view>
+                  <img src="../assets/certificates/cert-1.jpg" alt="Coaching Certification 121 — Certificate of Completion (75 Hours)" />
+                  <span class="cert-zoom-hint">🔍 Click to zoom</span>
+                </div>
+                <div class="certificate-item" data-cert-view>
+                  <img src="../assets/certificates/cert-2.jpg" alt="Certificate of Merit — Coach-Coachee Experience" />
+                  <span class="cert-zoom-hint">🔍 Click to zoom</span>
+                </div>
+              </div>
+
+              <div class="graduation-photo-wrap" data-cert-view>
+                <img src="../assets/kajal/graduation-moment.jpg" alt="Kajal Kumari receiving her Coaching Certification at graduation" class="graduation-photo" />
+                <span class="cert-zoom-hint">🔍 Click to zoom</span>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div style="margin-top:2.5rem;">

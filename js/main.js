@@ -466,6 +466,49 @@ function initCertificateLightbox() {
   });
 }
 
+/* ---- Verified Credentials Expandable Panel ---- */
+function initCredentialsToggle() {
+  const trigger = document.getElementById("btnVerifyCredentials");
+  const panel = document.getElementById("credentialsPanel");
+  const hideBtn = document.getElementById("btnHideCredentials");
+  const actionStatus = document.getElementById("verifyActionStatus");
+
+  if (!trigger || !panel) return;
+
+  function setExpanded(isExpanded) {
+    trigger.setAttribute("aria-expanded", isExpanded ? "true" : "false");
+    trigger.classList.toggle("is-active", isExpanded);
+    panel.classList.toggle("is-expanded", isExpanded);
+    panel.setAttribute("aria-hidden", isExpanded ? "false" : "true");
+    if (actionStatus) {
+      actionStatus.textContent = isExpanded ? "Hide Credentials" : "View Credentials";
+    }
+  }
+
+  // Explicit default collapsed state on load
+  setExpanded(false);
+
+  trigger.addEventListener("click", () => {
+    const isCurrentlyExpanded = trigger.getAttribute("aria-expanded") === "true";
+    setExpanded(!isCurrentlyExpanded);
+  });
+
+  if (hideBtn) {
+    hideBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      setExpanded(false);
+      trigger.focus();
+    });
+  }
+
+  // Ensure collapsed state across bfcache (browser back/forward navigation)
+  window.addEventListener("pageshow", (e) => {
+    if (e.persisted) {
+      setExpanded(false);
+    }
+  });
+}
+
 /* ---- Generic form status helper ---- */
 function setStatus(el, type, message) {
   if (!el) return;
@@ -663,12 +706,16 @@ function initContactForm() {
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn ? submitBtn.textContent : "Send Orientation Message";
 
-    // Gather all form fields
+    // Gather all form fields (excluding any title fields)
     const formData = new FormData(form);
     const data = {};
     formData.forEach((value, key) => {
-      data[key] = typeof value === "string" ? value.trim() : value;
+      if (key !== "title" && key !== "cTitle") {
+        data[key] = typeof value === "string" ? value.trim() : value;
+      }
     });
+    delete data.title;
+    delete data.cTitle;
 
     if (!data._subject) {
       data._subject = "New Inquiry — Help Me Get to Know You — Kajal Kumari Life Coaching";
@@ -841,6 +888,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initFAQ();
   initWhatsAppBooking();
   initCertificateLightbox();
+  initCredentialsToggle();
   initCustomTimeSlotSelect();
   initContactForm();
   initScrollReveal();
