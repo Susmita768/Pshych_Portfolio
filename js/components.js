@@ -187,7 +187,7 @@ function renderFooter() {
               </div>
               <p class="footer-tagline">A calm, confidential space to gain clarity, confidence, and move forward with intention.</p>
               <a href="mailto:Feelheard2@gmail.com">Feelheard2@gmail.com</a>
-              <a href="https://wa.me/919120192847" target="_blank" rel="noopener noreferrer">+91 91201 92847 (WhatsApp)</a>
+              <a href="https://wa.me/917808235383" target="_blank" rel="noopener noreferrer">+91 78082 35383 (WhatsApp)</a>
               <p class="footer-address">Online mind & clarity coaching<br/>Available worldwide</p>
             </div>
             <div class="footer-col">

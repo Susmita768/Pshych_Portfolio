@@ -15,10 +15,10 @@ window.SITE_DATA = {
     tagline: "Life Coaching Practice",
   },
 
-  // WhatsApp number for booking — REPLACE with the real business number
-  // before launch. Format: country code + number, no spaces or symbols.
+  // Official client WhatsApp number for booking and contact
+  // Format: country code + number, no spaces or symbols.
   whatsapp: {
-    number: "919120192847",
+    number: "917808235383",
     defaultMessage: "Hi Kajal, I'd like to book my free 30-minute Clarity Call.",
   },
 

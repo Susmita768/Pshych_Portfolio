@@ -473,6 +473,115 @@ function setStatus(el, type, message) {
   el.className = `status-msg is-visible status-msg--${type}`;
 }
 
+/* ---- Custom Accessible Preferred Time Slot Selector ---- */
+function initCustomTimeSlotSelect() {
+  const wrapper = document.getElementById("customTimeSlotWrapper");
+  if (!wrapper) return;
+
+  const trigger = document.getElementById("customTimeSlotTrigger");
+  const valueDisplay = document.getElementById("customTimeSlotValue");
+  const dropdown = document.getElementById("customTimeSlotList");
+  const select = document.getElementById("cTimeSlot");
+  if (!trigger || !valueDisplay || !dropdown || !select) return;
+
+  const options = dropdown.querySelectorAll(".custom-select-option");
+
+  function openDropdown() {
+    dropdown.classList.add("is-open");
+    trigger.classList.add("is-open");
+    trigger.setAttribute("aria-expanded", "true");
+    const activeOpt = dropdown.querySelector(".is-selected") || options[0];
+    if (activeOpt) activeOpt.focus();
+  }
+
+  function closeDropdown(focusTrigger = false) {
+    dropdown.classList.remove("is-open");
+    trigger.classList.remove("is-open");
+    trigger.setAttribute("aria-expanded", "false");
+    if (focusTrigger) trigger.focus();
+  }
+
+  function selectOption(opt) {
+    const val = opt.getAttribute("data-value");
+    select.value = val;
+    valueDisplay.textContent = val;
+    trigger.classList.add("has-value");
+
+    options.forEach((o) => {
+      const isSelected = o === opt;
+      o.classList.toggle("is-selected", isSelected);
+      o.setAttribute("aria-selected", isSelected ? "true" : "false");
+    });
+
+    // Clear any inline error on the time-slot field
+    const field = wrapper.closest(".field");
+    if (field) {
+      field.classList.remove("has-error");
+      const errEl = field.querySelector(".field-error");
+      if (errEl) errEl.textContent = "";
+    }
+
+    select.dispatchEvent(new Event("change", { bubbles: true }));
+    closeDropdown(true);
+  }
+
+  trigger.addEventListener("click", (e) => {
+    e.preventDefault();
+    if (dropdown.classList.contains("is-open")) {
+      closeDropdown(false);
+    } else {
+      openDropdown();
+    }
+  });
+
+  trigger.addEventListener("keydown", (e) => {
+    if (e.key === "ArrowDown" || e.key === "Enter" || e.key === " ") {
+      e.preventDefault();
+      openDropdown();
+    } else if (e.key === "Escape") {
+      closeDropdown(false);
+    }
+  });
+
+  options.forEach((opt, idx) => {
+    opt.addEventListener("click", () => {
+      selectOption(opt);
+    });
+
+    opt.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        selectOption(opt);
+      } else if (e.key === "ArrowDown") {
+        e.preventDefault();
+        const next = options[idx + 1] || options[0];
+        next.focus();
+      } else if (e.key === "ArrowUp") {
+        e.preventDefault();
+        const prev = options[idx - 1] || options[options.length - 1];
+        prev.focus();
+      } else if (e.key === "Escape") {
+        e.preventDefault();
+        closeDropdown(true);
+      } else if (e.key === "Tab") {
+        closeDropdown(false);
+      }
+    });
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!wrapper.contains(e.target)) {
+      closeDropdown(false);
+    }
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && dropdown.classList.contains("is-open")) {
+      closeDropdown(true);
+    }
+  });
+}
+
 /* ---- Contact form ---- */
 function initContactForm() {
   const form = document.getElementById("contactForm");
@@ -480,16 +589,81 @@ function initContactForm() {
   const status = document.getElementById("contactStatus");
   let isSubmitting = false;
 
+  // Helper to show or clear field-specific inline error
+  function setFieldError(fieldId, errorMsg) {
+    const el = document.getElementById(fieldId);
+    if (!el) return null;
+    const field = el.closest(".field");
+    if (!field) return null;
+
+    let errEl = field.querySelector(".field-error");
+    if (!errEl) {
+      errEl = document.createElement("span");
+      errEl.className = "field-error";
+      errEl.setAttribute("role", "alert");
+      field.appendChild(errEl);
+    }
+
+    if (errorMsg) {
+      field.classList.add("has-error");
+      errEl.innerHTML = `
+        <svg class="field-error-icon" viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <circle cx="8" cy="8" r="7"></circle>
+          <line x1="8" y1="5" x2="8" y2="8.5"></line>
+          <circle cx="8" cy="11.5" r="0.75" fill="currentColor"></circle>
+        </svg>
+        <span>${errorMsg}</span>
+      `;
+      if (fieldId === "cTimeSlot") {
+        return document.getElementById("customTimeSlotTrigger") || el;
+      }
+      return el;
+    } else {
+      field.classList.remove("has-error");
+      errEl.textContent = "";
+      return null;
+    }
+  }
+
+  function clearFieldError(fieldId) {
+    const el = document.getElementById(fieldId);
+    if (!el) return;
+    const field = el.closest(".field");
+    if (!field) return;
+    field.classList.remove("has-error");
+    const errEl = field.querySelector(".field-error");
+    if (errEl) {
+      errEl.textContent = "";
+    }
+  }
+
+  // Real-time error removal as the user enters information
+  const inputListeners = [
+    { id: "cName", event: "input" },
+    { id: "cMobile", event: "input" },
+    { id: "cEmail", event: "input" },
+    { id: "cTimeSlot", event: "change" },
+    { id: "cValues", event: "input" },
+    { id: "cFiveValues", event: "input" },
+    { id: "cAffecting", event: "input" },
+  ];
+  inputListeners.forEach(({ id, event }) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.addEventListener(event, () => clearFieldError(id));
+    }
+  });
+
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // Prevent duplicate submissions if already in-flight
+    // Prevent duplicate submissions if request is already in-flight
     if (isSubmitting) return;
 
     const submitBtn = form.querySelector('button[type="submit"]');
     const originalBtnText = submitBtn ? submitBtn.textContent : "Send Orientation Message";
 
-    // Gather all form fields using FormData so every named input/select/textarea is captured
+    // Gather all form fields
     const formData = new FormData(form);
     const data = {};
     formData.forEach((value, key) => {
@@ -497,47 +671,111 @@ function initContactForm() {
     });
 
     if (!data._subject) {
-      data._subject = "New Orientation Inquiry — Kajal Kumari Life Coaching";
+      data._subject = "New Inquiry — Help Me Get to Know You — Kajal Kumari Life Coaching";
     }
 
-    // Step 1: Validation
-    if (!data.name || !data.mobile || !data.email || !data.currentlyAffecting) {
-      setStatus(
-        status,
-        "error",
-        "Please fill in your preferred name, mobile number, email address, and what's currently affecting your life."
-      );
-      const requiredFields = ["name", "mobile", "email", "currentlyAffecting"];
-      for (const fieldName of requiredFields) {
-        if (!data[fieldName] && form[fieldName]) {
-          form[fieldName].focus();
-          break;
-        }
+    // Step 1: Inline Required-Field Validation
+    let firstInvalidEl = null;
+
+    // 1. Name
+    if (!data.name) {
+      const el = setFieldError("cName", "Please enter your name.");
+      if (!firstInvalidEl) firstInvalidEl = el;
+    } else {
+      clearFieldError("cName");
+    }
+
+    // 2. Phone Number
+    const phoneRaw = (data.mobile || data.phone || "").trim();
+    const phoneDigits = phoneRaw.replace(/\D/g, "");
+    if (!phoneRaw) {
+      const el = setFieldError("cMobile", "Please enter your phone number.");
+      if (!firstInvalidEl) firstInvalidEl = el;
+    } else if (phoneDigits.length < 10 || phoneDigits.length > 13) {
+      const el = setFieldError("cMobile", "Please enter a valid phone number.");
+      if (!firstInvalidEl) firstInvalidEl = el;
+    } else {
+      let coreDigits = phoneDigits;
+      if (phoneDigits.length === 12 && phoneDigits.startsWith("91")) {
+        coreDigits = phoneDigits.slice(2);
+      } else if (phoneDigits.length === 11 && phoneDigits.startsWith("0")) {
+        coreDigits = phoneDigits.slice(1);
       }
+      if (coreDigits.length === 10 && /^[5-9]\d{9}$/.test(coreDigits)) {
+        clearFieldError("cMobile");
+      } else if (coreDigits.length >= 10 && coreDigits.length <= 11 && !/^0+$/.test(coreDigits)) {
+        clearFieldError("cMobile");
+      } else {
+        const el = setFieldError("cMobile", "Please enter a valid phone number.");
+        if (!firstInvalidEl) firstInvalidEl = el;
+      }
+    }
+
+    // 3. Email Address
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[a-zA-Z]{2,}$/;
+    if (!data.email) {
+      const el = setFieldError("cEmail", "Please enter your email address.");
+      if (!firstInvalidEl) firstInvalidEl = el;
+    } else if (!emailRegex.test(data.email)) {
+      const el = setFieldError("cEmail", "Please enter a valid email address.");
+      if (!firstInvalidEl) firstInvalidEl = el;
+    } else {
+      clearFieldError("cEmail");
+    }
+
+    // 4. Preferred Time Slot
+    if (!data.timeSlot) {
+      const el = setFieldError("cTimeSlot", "Please select your preferred time slot.");
+      if (!firstInvalidEl) firstInvalidEl = el;
+    } else {
+      clearFieldError("cTimeSlot");
+    }
+
+    // 5. How does your value system work?
+    if (!data.valueSystem) {
+      const el = setFieldError("cValues", "Please share how your value system works.");
+      if (!firstInvalidEl) firstInvalidEl = el;
+    } else {
+      clearFieldError("cValues");
+    }
+
+    // 6. Kindly mention 5 values that you have
+    if (!data.fiveValues) {
+      const el = setFieldError("cFiveValues", "Please mention 5 values that are important to you.");
+      if (!firstInvalidEl) firstInvalidEl = el;
+    } else {
+      clearFieldError("cFiveValues");
+    }
+
+    // 7. What is affecting your life currently?
+    if (!data.currentlyAffecting) {
+      const el = setFieldError("cAffecting", "Please tell us what is affecting your life currently.");
+      if (!firstInvalidEl) firstInvalidEl = el;
+    } else {
+      clearFieldError("cAffecting");
+    }
+
+    // If any validation failed, preserve form data and auto-focus/scroll to first problem field
+    if (firstInvalidEl) {
+      firstInvalidEl.scrollIntoView({ behavior: "smooth", block: "center" });
+      setTimeout(() => {
+        firstInvalidEl.focus();
+      }, 250);
       return;
     }
 
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(data.email)) {
-      setStatus(status, "error", "Please enter a valid email address.");
-      if (form.email) form.email.focus();
-      return;
-    }
-
-    const phoneDigits = data.mobile.replace(/[^0-9]/g, "");
-    if (phoneDigits.length < 6) {
-      setStatus(status, "error", "Please enter a valid mobile number.");
-      if (form.mobile) form.mobile.focus();
-      return;
-    }
-
-    // Clear any previous error status
+    // Clear previous status notice
     if (status) {
       status.className = "status-msg";
       status.textContent = "";
     }
 
-    // Step 2: Set loading state and lock submit button
+    // Normalize phone & preferred time slot keys for Formspree
+    data.phone = phoneRaw;
+    data.mobile = phoneRaw;
+    data.preferredTimeSlot = data.timeSlot;
+
+    // Step 2: Prevent duplicate submission and set loading state
     isSubmitting = true;
     if (submitBtn) {
       submitBtn.disabled = true;
@@ -545,12 +783,11 @@ function initContactForm() {
       submitBtn.textContent = "Sending…";
     }
 
-    // Send complete data to Formspree via AJAX
+    // Step 3: Send data to Formspree via AJAX
     const res = await window.WellnessAPI.submitContact(data);
 
-    // Step 3: Handle Result
+    // Step 4: Handle Result
     if (res.ok) {
-      // Show brief success confirmation on button
       if (submitBtn) {
         submitBtn.textContent = "✓ Message Sent";
       }
@@ -567,17 +804,22 @@ function initContactForm() {
         modal.setAttribute("aria-hidden", "false");
       }
 
-      // Reuse existing single source of truth for business WhatsApp number
-      const waNumber = (window.SITE_DATA && window.SITE_DATA.whatsapp && window.SITE_DATA.whatsapp.number) || "919120192847";
-      const waMsg = "Hi Kajal, I’ve just submitted the form on your website and would love to connect. Please let me know the next steps when convenient. Thank you!";
+      // Official client WhatsApp number
+      const waNumber = (window.SITE_DATA && window.SITE_DATA.whatsapp && window.SITE_DATA.whatsapp.number) || "917808235383";
+      let waMsg = "Hi Kajal, I’ve just submitted the orientation form on your website and would love to connect.";
+      if (data.timeSlot) {
+        waMsg += ` My preferred time slot is ${data.timeSlot} (IST).`;
+      }
+      waMsg += " Please let me know the next steps when convenient. Thank you!";
+
       const waUrl = `https://wa.me/${waNumber}?text=${encodeURIComponent(waMsg)}`;
 
-      // Allow 1.8 seconds for customer to read confirmation, then automatically redirect in the same tab
+      // Allow 1.8 seconds for customer to read confirmation, then automatically redirect
       setTimeout(() => {
         window.location.href = waUrl;
       }, 1800);
     } else {
-      // Formspree failed or network error: restore button, preserve form values, show error
+      // Submission failure: restore button, keep form data intact, display calm error message
       isSubmitting = false;
       if (submitBtn) {
         submitBtn.disabled = false;
@@ -599,6 +841,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initFAQ();
   initWhatsAppBooking();
   initCertificateLightbox();
+  initCustomTimeSlotSelect();
   initContactForm();
   initScrollReveal();
   initAnchorNavigation();
@@ -607,3 +850,4 @@ document.addEventListener("DOMContentLoaded", () => {
   // Re-run reveal observer for any content injected after initial load
   setTimeout(initScrollReveal, 80);
 });
+

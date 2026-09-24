@@ -78,12 +78,11 @@ number, no spaces/symbols).
 
 ## What to swap before launch
 
-- **WhatsApp number** — `js/data.js` → `whatsapp.number` (currently a
-  placeholder).
+- **WhatsApp number** — `js/data.js` → `whatsapp.number` (configured with official number +91 78082 35383).
 - **About page bio** — `about/index.html` has a clearly-marked placeholder
   note. Replace it with Kajal's real, full story once received.
 - **Contact details** — footer (`js/components.js`) and
-  `contact/index.html` currently use a placeholder email/WhatsApp number.
+  `contact/index.html` configured with official WhatsApp / contact number (+91 78082 35383).
 - **Content** — areas, services, and FAQs all live in `js/data.js` in one
   place.
 
