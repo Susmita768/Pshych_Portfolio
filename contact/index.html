@@ -42,21 +42,10 @@
 
           <p class="form-section-title">A Little About You</p>
           <p class="form-section-desc" style="font-size:0.9rem; color:var(--text-muted); margin-top:-0.5rem; margin-bottom:1.35rem; line-height:1.55;">A few details will help me understand where you are right now and how I can best support you.</p>
-          <div class="field-row">
-            <div class="field">
-              <label for="cTitle">Title <span class="hint">(optional)</span></label>
-              <select id="cTitle" name="title">
-                <option value="">Select…</option>
-                <option value="Mr.">Mr.</option>
-                <option value="Ms.">Ms.</option>
-                <option value="Mrs.">Mrs.</option>
-              </select>
-            </div>
-            <div class="field">
-              <label for="cName">Name <span class="required-star" aria-hidden="true">*</span></label>
-              <input type="text" id="cName" name="name" placeholder="Your name" required />
-              <span class="field-error" id="cNameError" role="alert"></span>
-            </div>
+          <div class="field">
+            <label for="cName">Name <span class="required-star" aria-hidden="true">*</span></label>
+            <input type="text" id="cName" name="name" placeholder="Your name" required />
+            <span class="field-error" id="cNameError" role="alert"></span>
           </div>
           <div class="field">
             <label for="cAddress">Home Address <span class="hint">(optional)</span></label>
